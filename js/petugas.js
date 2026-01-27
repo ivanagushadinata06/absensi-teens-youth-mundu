@@ -4,12 +4,12 @@ function logout() {
   });
 }
 
-// tanggal hari ini
+// tanggal hari ini (YYYY-MM-DD)
 const today = new Date().toISOString().split("T")[0];
 document.getElementById("tanggalHariIni").innerText =
   "Tanggal: " + today;
 
-// tampilkan daftar jemaat + absensi
+// tampilkan daftar jemaat + absensi hari ini
 db.collection("members").onSnapshot((snapshot) => {
   const list = document.getElementById("listAbsensi");
   list.innerHTML = "";
@@ -26,12 +26,12 @@ db.collection("members").onSnapshot((snapshot) => {
       .doc(today)
       .get()
       .then((att) => {
-        if (att.exists && att.data()[doc.id]) {
+        if (att.exists && att.data()[doc.id] === true) {
           checkbox.checked = true;
         }
       });
 
-    // simpan absensi
+    // simpan absensi saat dicentang
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(today)
@@ -44,3 +44,5 @@ db.collection("members").onSnapshot((snapshot) => {
     li.appendChild(checkbox);
     li.appendChild(document.createTextNode(" " + member.name));
     list.appendChild(li);
+  });
+});
