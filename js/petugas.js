@@ -8,6 +8,19 @@ function logout() {
 }
 
 /********************
+ * FORMAT NAMA
+ * huruf besar di awal setiap kata
+ ********************/
+function formatNama(nama) {
+  return nama
+    .toLowerCase()
+    .split(" ")
+    .filter(kata => kata.trim() !== "")
+    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .join(" ");
+}
+
+/********************
  * TANGGAL HARI INI
  ********************/
 const today = new Date().toISOString().split("T")[0];
@@ -19,16 +32,17 @@ document.getElementById("tanggalHariIni").innerText =
  ********************/
 function tambahJemaatPetugas() {
   const input = document.getElementById("namaBaru");
-  const nama = input.value.trim();
+  const namaInput = input.value.trim();
 
-  if (!nama) {
+  if (!namaInput) {
     alert("Nama tidak boleh kosong");
     return;
   }
 
+  const nama = formatNama(namaInput);
   const namaLower = nama.toLowerCase();
 
-  // Ambil semua jemaat untuk cek duplikat
+  // cek duplikat (aman untuk data lama & baru)
   db.collection("members")
     .get()
     .then((snapshot) => {
@@ -36,10 +50,7 @@ function tambahJemaatPetugas() {
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (
-          data.name &&
-          data.name.toLowerCase() === namaLower
-        ) {
+        if (data.name && data.name.toLowerCase() === namaLower) {
           sudahAda = true;
         }
       });
@@ -49,7 +60,7 @@ function tambahJemaatPetugas() {
         return;
       }
 
-      // Simpan jika benar-benar belum ada
+      // simpan nama
       db.collection("members")
         .add({
           name: nama,
@@ -80,7 +91,7 @@ db.collection("members").onSnapshot((snapshot) => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    // Ambil status absensi hari ini
+    // ambil status absensi hari ini
     db.collection("attendance")
       .doc(today)
       .get()
@@ -90,7 +101,7 @@ db.collection("members").onSnapshot((snapshot) => {
         }
       });
 
-    // Simpan absensi (boolean)
+    // simpan absensi (boolean)
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(today)
