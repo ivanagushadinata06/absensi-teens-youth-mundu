@@ -8,19 +8,16 @@ function logout() {
 }
 
 /********************
- * FORMAT NAMA
- * Selalu huruf besar di awal kata
+ * FORMAT NAMA (PAKSA RAPI)
  ********************/
 function formatNama(nama) {
   if (!nama) return "";
   return nama
     .toString()
-    .toLowerCase()
     .trim()
+    .toLowerCase()
     .split(/\s+/)
-    .map(
-      kata => kata.charAt(0).toUpperCase() + kata.slice(1)
-    )
+    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
     .join(" ");
 }
 
@@ -48,15 +45,12 @@ function tambahJemaatPetugas() {
 
   db.collection("members")
     .get()
-    .then((snapshot) => {
+    .then(snapshot => {
       let sudahAda = false;
 
-      snapshot.forEach((doc) => {
+      snapshot.forEach(doc => {
         const data = doc.data();
-        if (
-          data.name &&
-          data.name.toLowerCase() === namaLower
-        ) {
+        if (data.name && data.name.toLowerCase() === namaLower) {
           sudahAda = true;
         }
       });
@@ -66,47 +60,39 @@ function tambahJemaatPetugas() {
         return;
       }
 
-      db.collection("members")
-        .add({
-          name: nama,            // DISIMPAN SUDAH RAPI
-          name_lower: namaLower
-        })
-        .then(() => {
-          input.value = "";
-          alert("✅ Nama berhasil ditambahkan");
-        });
-    })
-    .catch((err) => {
-      console.error(err);
-      alert("Terjadi kesalahan saat menambah nama");
+      db.collection("members").add({
+        name: nama,
+        name_lower: namaLower
+      }).then(() => {
+        input.value = "";
+        alert("✅ Nama berhasil ditambahkan");
+      });
     });
 }
 
 /********************
- * TAMPILKAN ABSENSI HARI INI
+ * TAMPILKAN ABSENSI (FORMAT DIPAKSA)
  ********************/
-db.collection("members").onSnapshot((snapshot) => {
+db.collection("members").onSnapshot(snapshot => {
   const list = document.getElementById("listAbsensi");
   list.innerHTML = "";
 
-  snapshot.forEach((doc) => {
+  snapshot.forEach(doc => {
     const member = doc.data();
     const li = document.createElement("li");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    // Ambil status absensi hari ini
     db.collection("attendance")
       .doc(today)
       .get()
-      .then((att) => {
+      .then(att => {
         if (att.exists && att.data()[doc.id] === true) {
           checkbox.checked = true;
         }
       });
 
-    // Simpan absensi
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(today)
@@ -116,13 +102,11 @@ db.collection("members").onSnapshot((snapshot) => {
         );
     });
 
-    // 🔥 PAKSA FORMAT SAAT DITAMPILKAN
+    // 🔥 PAKSA FORMAT DI SINI
     const namaTampil = formatNama(member.name);
 
     li.appendChild(checkbox);
-    li.appendChild(
-      document.createTextNode(" " + namaTampil)
-    );
+    li.appendChild(document.createTextNode(" " + namaTampil));
     list.appendChild(li);
   });
 });
