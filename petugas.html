@@ -10,10 +10,21 @@
   <h2>Absensi Hari Ini</h2>
   <p>Absensi Teens & Youth Mundu</p>
 
-  <div class="card">
-    <p><strong>Status:</strong> Login sebagai PETUGAS</p>
-    <button onclick="logout()">Logout</button>
-  </div>
+ <div class="card">
+  <p><strong>Status:</strong> Login sebagai PETUGAS</p>
+
+  <h3 id="tanggalHariIni"></h3>
+
+  <h4>Tambah Nama Jemaat</h4>
+  <input type="text" id="namaBaru" placeholder="Nama Jemaat">
+  <button onclick="tambahJemaatPetugas()">Tambah</button>
+
+  <h4>Daftar Absensi</h4>
+  <ul id="listAbsensi"></ul>
+
+  <br>
+  <button onclick="logout()">Logout</button>
+</div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -23,4 +34,5 @@
   <script src="js/firebase.js"></script>
   <script src="js/petugas.js"></script>
 </body>
+
 </html>
