@@ -1,26 +1,41 @@
-// Proteksi login
+/************************************************
+ * PROTEKSI LOGIN
+ ************************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = "index.html";
   }
 });
 
-const bulan = [
-  "Januari","Februari","Maret","April","Mei","Juni",
-  "Juli","Agustus","September","Oktober","November","Desember"
+/************************************************
+ * DATA BULAN
+ ************************************************/
+const daftarBulan = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
 
-const container = document.getElementById("bulanContainer");
-if (!container) return;
+/************************************************
+ * TAMPILKAN BULAN
+ ************************************************/
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("bulanContainer");
 
-bulan.forEach((nama, index) => {
-  const btn = document.createElement("button");
-  btn.innerText = nama;
-  btn.style.marginBottom = "10px";
+  // kalau elemen tidak ada, hentikan dengan aman
+  if (!container) {
+    console.error("bulanContainer tidak ditemukan");
+    return;
+  }
 
-  btn.onclick = () => {
-    window.location.href = `petugas-tanggal.html?bulan=${index}`;
-  };
+  daftarBulan.forEach((namaBulan, index) => {
+    const btn = document.createElement("button");
+    btn.innerText = namaBulan;
+    btn.style.marginBottom = "10px";
 
-  container.appendChild(btn);
+    btn.onclick = () => {
+      window.location.href = `petugas-tanggal.html?bulan=${index}`;
+    };
+
+    container.appendChild(btn);
+  });
 });
