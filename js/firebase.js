@@ -1,4 +1,6 @@
-// Firebase configuration
+// ================================
+// FIREBASE CONFIG (COMPAT MODE)
+// ================================
 const firebaseConfig = {
   apiKey: "AIzaSyBrLotz8GbxB1IEFeKxs4AHocKYQ54075o",
   authDomain: "absensi-teensyouth-mundu.firebaseapp.com",
@@ -8,9 +10,9 @@ const firebaseConfig = {
   appId: "1:907886050098:web:370b3b70f48e6260cfb52b"
 };
 
-// Initialize Firebase (COMPAT MODE)
+// Init Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Initialize services
+// Global services
 const auth = firebase.auth();
 const db = firebase.firestore();
