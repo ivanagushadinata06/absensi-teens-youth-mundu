@@ -1,30 +1,32 @@
-/********************
+/************************************************
  * LOGOUT
- ********************/
+ ************************************************/
 function logout() {
   auth.signOut().then(() => {
     window.location.href = "./index.html";
   });
 }
 
-/********************
+/************************************************
  * FORMAT NAMA
- * Selalu huruf besar di awal kata
- ********************/
+ ************************************************/
 function formatNama(nama) {
   if (!nama) return "";
+
   return nama
     .toString()
     .trim()
     .toLowerCase()
     .split(/\s+/)
-    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .map(
+      kata => kata.charAt(0).toUpperCase() + kata.slice(1)
+    )
     .join(" ");
 }
 
-/********************
- * TAMBAH NAMA (ADMIN + ANTI DOBEL)
- ********************/
+/************************************************
+ * TAMBAH NAMA JEMAAT (ADMIN)
+ ************************************************/
 function tambahJemaat() {
   const input = document.getElementById("namaJemaat");
   const namaInput = input.value.trim();
@@ -54,19 +56,24 @@ function tambahJemaat() {
         return;
       }
 
-      db.collection("members").add({
+      return db.collection("members").add({
         name: nama,
         name_lower: namaLower
-      }).then(() => {
-        input.value = "";
-        alert("✅ Nama berhasil ditambahkan");
       });
+    })
+    .then(() => {
+      input.value = "";
+      alert("✅ Nama berhasil ditambahkan");
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Terjadi kesalahan");
     });
 }
 
-/********************
- * TAMPILKAN DAFTAR JEMAAT (FORMAT DIPAKSA)
- ********************/
+/************************************************
+ * TAMPILKAN DAFTAR JEMAAT
+ ************************************************/
 db.collection("members").onSnapshot(snapshot => {
   const list = document.getElementById("listJemaat");
   if (!list) return;
@@ -77,9 +84,7 @@ db.collection("members").onSnapshot(snapshot => {
     const data = doc.data();
     const li = document.createElement("li");
 
-    // 🔥 FORMAT DIPAKSA SAAT TAMPIL
     li.innerText = formatNama(data.name);
-
     list.appendChild(li);
   });
 });
