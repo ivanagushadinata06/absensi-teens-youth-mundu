@@ -1,38 +1,26 @@
-/************************************************
- * PROTEKSI LOGIN
- ************************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = "index.html";
   }
 });
 
-/************************************************
- * AMBIL TANGGAL DARI URL
- ************************************************/
 const params = new URLSearchParams(window.location.search);
 const tanggal = params.get("tanggal");
+if (!tanggal) return;
 
 document.getElementById("judulTanggal").innerText =
   "Absensi Ibadah: " + tanggal;
 
-/************************************************
- * FORMAT NAMA
- ************************************************/
 function formatNama(nama) {
-  if (!nama) return "";
   return nama
     .toString()
     .trim()
     .toLowerCase()
     .split(/\s+/)
-    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .map(k => k.charAt(0).toUpperCase() + k.slice(1))
     .join(" ");
 }
 
-/************************************************
- * TAMPILKAN ABSENSI (TABEL, URUT A–Z)
- ************************************************/
 db.collection("members").onSnapshot(snapshot => {
   const container = document.getElementById("listAbsensi");
   if (!container) return;
@@ -79,14 +67,14 @@ db.collection("members").onSnapshot(snapshot => {
         }
       });
 
-    checkbox.addEventListener("change", () => {
+    checkbox.onchange = () => {
       db.collection("attendance")
         .doc(tanggal)
         .set(
           { [member.id]: checkbox.checked },
           { merge: true }
         );
-    });
+    };
 
     tdCheck.appendChild(checkbox);
     tr.appendChild(tdNama);
