@@ -14,15 +14,33 @@ function tambahJemaat() {
     return;
   }
 
+  // Samakan format nama (hindari Andi vs andi)
+  const namaLower = nama.toLowerCase();
+
+  // Cek apakah nama sudah ada
   db.collection("members")
-    .add({ name: nama })
-    .then(() => {
-      input.value = "";
-      alert("Nama berhasil ditambahkan");
+    .where("name_lower", "==", namaLower)
+    .get()
+    .then((snapshot) => {
+      if (!snapshot.empty) {
+        alert("⚠️ Nama sudah ada, tidak boleh duplikat");
+        return;
+      }
+
+      // Kalau belum ada, baru simpan
+      db.collection("members")
+        .add({
+          name: nama,
+          name_lower: namaLower
+        })
+        .then(() => {
+          input.value = "";
+          alert("✅ Nama berhasil ditambahkan");
+        });
     })
     .catch((err) => {
-      alert("Gagal: " + err.message);
       console.error(err);
+      alert("Terjadi kesalahan saat menyimpan data");
     });
 }
 
@@ -37,4 +55,5 @@ db.collection("members").onSnapshot(snapshot => {
     list.appendChild(li);
   });
 });
+
 
