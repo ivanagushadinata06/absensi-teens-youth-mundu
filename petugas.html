@@ -3,38 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <title>Petugas | Absensi Teens & Youth Mundu</title>
-  <link rel="stylesheet" href="css/style.css">
+
+  <!-- WAJIB untuk mobile -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <h2>Absensi Hari Ini</h2>
+  <h2>Absensi Ibadah</h2>
   <p>Absensi Teens & Youth Mundu</p>
 
- <div class="card">
-  <p><strong>Status:</strong> Login sebagai PETUGAS</p>
+  <div class="card">
 
-  <h3 id="tanggalHariIni"></h3>
+    <p><strong>Status:</strong> Login sebagai PETUGAS</p>
 
-  <h4>Tambah Nama Jemaat</h4>
-  <input type="text" id="namaBaru" placeholder="Nama Jemaat">
-  <button onclick="tambahJemaatPetugas()">Tambah</button>
+    <!-- ========================= -->
+    <!-- PILIH BULAN -->
+    <!-- ========================= -->
+    <h4>Pilih Bulan Ibadah</h4>
+    <div id="bulanContainer"></div>
 
-  <h4>Daftar Absensi</h4>
-  <ul id="listAbsensi"></ul>
+    <!-- ========================= -->
+    <!-- PILIH TANGGAL -->
+    <!-- ========================= -->
+    <h4 id="judulTanggal" style="display:none;"></h4>
+    <div id="tanggalContainer"></div>
 
-  <br>
-  <button onclick="logout()">Logout</button>
-</div>
+    <hr>
 
-  <!-- Firebase -->
+    <!-- ========================= -->
+    <!-- TAMBAH NAMA JEMAAT -->
+    <!-- ========================= -->
+    <h4>Tambah Nama Jemaat</h4>
+    <input type="text" id="namaBaru" placeholder="Nama Jemaat">
+    <button onclick="tambahJemaatPetugas()">Tambah</button>
+
+    <hr>
+
+    <!-- ========================= -->
+    <!-- ABSENSI -->
+    <!-- ========================= -->
+    <h4 id="judulAbsensi" style="display:none;"></h4>
+    <div id="listAbsensi"></div>
+
+    <br>
+    <button onclick="logout()">Logout</button>
+
+  </div>
+
+  <!-- ========================= -->
+  <!-- FIREBASE -->
+  <!-- ========================= -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
+  <!-- SCRIPT -->
   <script src="js/firebase.js"></script>
   <script src="js/petugas.js"></script>
+
 </body>
-
 </html>
-
