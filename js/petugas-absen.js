@@ -1,49 +1,93 @@
+/************************************************
+ * AMBIL TANGGAL DARI URL
+ ************************************************/
 const params = new URLSearchParams(window.location.search);
 const tanggal = params.get("tanggal");
 
 document.getElementById("judulTanggal").innerText =
   "Absensi Ibadah: " + tanggal;
 
+/************************************************
+ * FORMAT NAMA (Kapital Awal Kata)
+ ************************************************/
 function formatNama(nama) {
+  if (!nama) return "";
   return nama
+    .toString()
+    .trim()
     .toLowerCase()
-    .split(" ")
-    .map(k => k.charAt(0).toUpperCase() + k.slice(1))
+    .split(/\s+/)
+    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
     .join(" ");
 }
 
-// Tampilkan absensi
+/************************************************
+ * TAMPILKAN ABSENSI (VERSI YANG SUDAH TERBUKTI)
+ ************************************************/
 db.collection("members").onSnapshot(snapshot => {
-  const list = document.getElementById("listAbsensi");
-  list.innerHTML = "";
+  const container = document.getElementById("listAbsensi");
+  if (!container) return;
 
+  // ambil & sortir jemaat
+  const members = [];
   snapshot.forEach(doc => {
-    const row = document.createElement("div");
-    row.style.display = "flex";
-    row.style.justifyContent = "space-between";
-    row.style.padding = "8px 0";
+    members.push({ id: doc.id, ...doc.data() });
+  });
 
-    const nama = document.createElement("span");
-    nama.innerText = formatNama(doc.data().name);
+  members.sort((a, b) =>
+    formatNama(a.name).localeCompare(formatNama(b.name))
+  );
 
-    const check = document.createElement("input");
-    check.type = "checkbox";
+  // render tabel
+  container.innerHTML = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nama Jemaat</th>
+          <th>Hadir</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  `;
 
-    db.collection("attendance").doc(tanggal).get()
+  const tbody = container.querySelector("tbody");
+
+  members.forEach(member => {
+    const tr = document.createElement("tr");
+
+    // kolom nama
+    const tdNama = document.createElement("td");
+    tdNama.innerText = formatNama(member.name);
+
+    // kolom checkbox
+    const tdCheck = document.createElement("td");
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+
+    // ambil status absensi tanggal ini
+    db.collection("attendance")
+      .doc(tanggal)
+      .get()
       .then(att => {
-        if (att.exists && att.data()[doc.id]) {
-          check.checked = true;
+        if (att.exists && att.data()[member.id] === true) {
+          checkbox.checked = true;
         }
       });
 
-    check.onchange = () => {
+    // simpan absensi
+    checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(tanggal)
-        .set({ [doc.id]: check.checked }, { merge: true });
-    };
+        .set(
+          { [member.id]: checkbox.checked },
+          { merge: true }
+        );
+    });
 
-    row.appendChild(nama);
-    row.appendChild(check);
-    list.appendChild(row);
+    tdCheck.appendChild(checkbox);
+    tr.appendChild(tdNama);
+    tr.appendChild(tdCheck);
+    tbody.appendChild(tr);
   });
 });
