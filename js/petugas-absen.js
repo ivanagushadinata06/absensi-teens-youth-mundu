@@ -5,27 +5,35 @@ document.getElementById("judulTanggal").innerText =
   "Absensi Ibadah: " + tanggal;
 
 function formatNama(nama) {
-  return nama.toLowerCase().split(" ")
+  return nama
+    .toLowerCase()
+    .split(" ")
     .map(k => k.charAt(0).toUpperCase() + k.slice(1))
     .join(" ");
 }
 
+// Tampilkan absensi
 db.collection("members").onSnapshot(snapshot => {
   const list = document.getElementById("listAbsensi");
   list.innerHTML = "";
 
   snapshot.forEach(doc => {
-    const tr = document.createElement("div");
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.justifyContent = "space-between";
+    row.style.padding = "8px 0";
 
-    const label = document.createElement("span");
-    label.innerText = formatNama(doc.data().name);
+    const nama = document.createElement("span");
+    nama.innerText = formatNama(doc.data().name);
 
     const check = document.createElement("input");
     check.type = "checkbox";
 
     db.collection("attendance").doc(tanggal).get()
       .then(att => {
-        if (att.exists && att.data()[doc.id]) check.checked = true;
+        if (att.exists && att.data()[doc.id]) {
+          check.checked = true;
+        }
       });
 
     check.onchange = () => {
@@ -34,8 +42,8 @@ db.collection("members").onSnapshot(snapshot => {
         .set({ [doc.id]: check.checked }, { merge: true });
     };
 
-    tr.appendChild(label);
-    tr.appendChild(check);
-    list.appendChild(tr);
+    row.appendChild(nama);
+    row.appendChild(check);
+    list.appendChild(row);
   });
 });
