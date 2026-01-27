@@ -1,36 +1,44 @@
-/********************
+/************************************************
  * LOGOUT
- ********************/
+ ************************************************/
 function logout() {
   auth.signOut().then(() => {
     window.location.href = "./index.html";
   });
 }
 
-/********************
- * FORMAT NAMA (PAKSA RAPI)
- ********************/
+/************************************************
+ * FORMAT NAMA
+ * Huruf besar di awal setiap kata
+ ************************************************/
 function formatNama(nama) {
   if (!nama) return "";
+
   return nama
     .toString()
     .trim()
     .toLowerCase()
     .split(/\s+/)
-    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .map(
+      kata => kata.charAt(0).toUpperCase() + kata.slice(1)
+    )
     .join(" ");
 }
 
-/********************
+/************************************************
  * TANGGAL HARI INI
- ********************/
+ ************************************************/
 const today = new Date().toISOString().split("T")[0];
-document.getElementById("tanggalHariIni").innerText =
-  "Tanggal: " + today;
+const elTanggal = document.getElementById("tanggalHariIni");
+if (elTanggal) {
+  elTanggal.innerText = "Tanggal: " + today;
+}
 
-/********************
- * TAMBAH NAMA (ANTI DOBEL TOTAL)
- ********************/
+/************************************************
+ * TAMBAH NAMA JEMAAT (PETUGAS)
+ * - Anti duplikat total
+ * - Nama otomatis rapi
+ ************************************************/
 function tambahJemaatPetugas() {
   const input = document.getElementById("namaBaru");
   const namaInput = input.value.trim();
@@ -60,21 +68,28 @@ function tambahJemaatPetugas() {
         return;
       }
 
-      db.collection("members").add({
+      return db.collection("members").add({
         name: nama,
         name_lower: namaLower
-      }).then(() => {
-        input.value = "";
-        alert("✅ Nama berhasil ditambahkan");
       });
+    })
+    .then(() => {
+      input.value = "";
+      alert("✅ Nama berhasil ditambahkan");
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Terjadi kesalahan saat menambah nama");
     });
 }
 
-/********************
- * TAMPILKAN ABSENSI (FORMAT DIPAKSA)
- ********************/
+/************************************************
+ * TAMPILKAN ABSENSI HARI INI
+ ************************************************/
 db.collection("members").onSnapshot(snapshot => {
   const list = document.getElementById("listAbsensi");
+  if (!list) return;
+
   list.innerHTML = "";
 
   snapshot.forEach(doc => {
@@ -84,6 +99,7 @@ db.collection("members").onSnapshot(snapshot => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
+    // Ambil status absensi hari ini
     db.collection("attendance")
       .doc(today)
       .get()
@@ -93,6 +109,7 @@ db.collection("members").onSnapshot(snapshot => {
         }
       });
 
+    // Simpan absensi (boolean)
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(today)
@@ -102,11 +119,13 @@ db.collection("members").onSnapshot(snapshot => {
         );
     });
 
-    // 🔥 PAKSA FORMAT DI SINI
+    // Paksa format nama saat tampil
     const namaTampil = formatNama(member.name);
 
     li.appendChild(checkbox);
-    li.appendChild(document.createTextNode(" " + namaTampil));
+    li.appendChild(
+      document.createTextNode(" " + namaTampil)
+    );
     list.appendChild(li);
   });
 });
