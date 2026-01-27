@@ -1,35 +1,19 @@
-/************************************************
- * PROTEKSI LOGIN
- ************************************************/
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href = "index.html";
-  }
-});
-
-/************************************************
- * DATA BULAN
- ************************************************/
-const daftarBulan = [
-  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-  "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-];
-
-/************************************************
- * TAMPILKAN BULAN
- ************************************************/
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("bulanContainer");
 
-  // kalau elemen tidak ada, hentikan dengan aman
   if (!container) {
-    console.error("bulanContainer tidak ditemukan");
+    alert("bulanContainer tidak ditemukan");
     return;
   }
 
-  daftarBulan.forEach((namaBulan, index) => {
+  const daftarBulan = [
+    "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+    "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+  ];
+
+  daftarBulan.forEach((nama, index) => {
     const btn = document.createElement("button");
-    btn.innerText = namaBulan;
+    btn.innerText = nama;
     btn.style.marginBottom = "10px";
 
     btn.onclick = () => {
