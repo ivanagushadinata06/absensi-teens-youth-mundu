@@ -6,14 +6,24 @@ function logout() {
 
 // Tambah jemaat
 function tambahJemaat() {
-  const nama = document.getElementById("namaJemaat").value;
-  if (!nama) return alert("Nama tidak boleh kosong");
+  const input = document.getElementById("namaJemaat");
+  const nama = input.value.trim();
 
-  db.collection("members").add({
-    name: nama
-  }).then(() => {
-    document.getElementById("namaJemaat").value = "";
-  });
+  if (!nama) {
+    alert("Nama tidak boleh kosong");
+    return;
+  }
+
+  db.collection("members")
+    .add({ name: nama })
+    .then(() => {
+      input.value = "";
+      alert("Nama berhasil ditambahkan");
+    })
+    .catch((err) => {
+      alert("Gagal: " + err.message);
+      console.error(err);
+    });
 }
 
 // Tampilkan jemaat
@@ -27,3 +37,4 @@ db.collection("members").onSnapshot(snapshot => {
     list.appendChild(li);
   });
 });
+
