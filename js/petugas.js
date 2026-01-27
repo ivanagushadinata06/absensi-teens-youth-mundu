@@ -8,7 +8,7 @@ function logout() {
 }
 
 /************************************************
- * FORMAT NAMA (Kapital Awal Kata)
+ * FORMAT NAMA
  ************************************************/
 function formatNama(nama) {
   if (!nama) return "";
@@ -22,120 +22,135 @@ function formatNama(nama) {
 }
 
 /************************************************
- * TANGGAL HARI INI
+ * VARIABEL GLOBAL TANGGAL TERPILIH
  ************************************************/
-const today = new Date().toISOString().split("T")[0];
-const elTanggal = document.getElementById("tanggalHariIni");
-if (elTanggal) elTanggal.innerText = "Tanggal: " + today;
+let tanggalDipilih = null;
 
 /************************************************
- * TAMBAH NAMA JEMAAT (PETUGAS – ANTI DUPLIKAT)
+ * BULAN & TANGGAL IBADAH (HARI MINGGU)
  ************************************************/
-function tambahJemaatPetugas() {
-  const input = document.getElementById("namaBaru");
-  const namaInput = input.value.trim();
+const namaBulan = [
+  "Januari","Februari","Maret","April","Mei","Juni",
+  "Juli","Agustus","September","Oktober","November","Desember"
+];
 
-  if (!namaInput) {
-    alert("Nama tidak boleh kosong");
-    return;
+const bulanContainer = document.getElementById("bulanContainer");
+const tanggalContainer = document.getElementById("tanggalContainer");
+const listAbsensi = document.getElementById("listAbsensi");
+const judulTanggal = document.getElementById("judulTanggal");
+const judulAbsensi = document.getElementById("judulAbsensi");
+
+/************************************************
+ * TAMPILKAN PILIHAN BULAN
+ ************************************************/
+namaBulan.forEach((bulan, index) => {
+  const btn = document.createElement("button");
+  btn.innerText = bulan;
+  btn.style.marginBottom = "8px";
+
+  btn.onclick = () => tampilkanTanggalIbadah(index);
+  bulanContainer.appendChild(btn);
+});
+
+/************************************************
+ * HITUNG & TAMPILKAN HARI MINGGU
+ ************************************************/
+function tampilkanTanggalIbadah(bulanIndex) {
+  tanggalContainer.innerHTML = "";
+  listAbsensi.innerHTML = "";
+  judulAbsensi.style.display = "none";
+
+  judulTanggal.style.display = "block";
+  judulTanggal.innerText =
+    "Pilih Tanggal Ibadah - " + namaBulan[bulanIndex];
+
+  const tahun = new Date().getFullYear();
+  const lastDay = new Date(tahun, bulanIndex + 1, 0).getDate();
+
+  for (let tgl = 1; tgl <= lastDay; tgl++) {
+    const date = new Date(tahun, bulanIndex, tgl);
+
+    // hanya hari Minggu (0)
+    if (date.getDay() === 0) {
+      const tanggalISO = date.toISOString().split("T")[0];
+      const btn = document.createElement("button");
+
+      btn.innerText = "Minggu, " + tgl;
+      btn.style.marginBottom = "6px";
+
+      btn.onclick = () => {
+        tanggalDipilih = tanggalISO;
+        tampilkanAbsensi(tanggalISO);
+      };
+
+      tanggalContainer.appendChild(btn);
+    }
   }
-
-  const nama = formatNama(namaInput);
-  const namaLower = nama.toLowerCase();
-
-  db.collection("members")
-    .get()
-    .then(snapshot => {
-      let sudahAda = false;
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        if (data.name && data.name.toLowerCase() === namaLower) {
-          sudahAda = true;
-        }
-      });
-
-      if (sudahAda) {
-        alert("⚠️ Nama sudah ada, tidak boleh duplikat");
-        return;
-      }
-
-      return db.collection("members").add({
-        name: nama,
-        name_lower: namaLower
-      });
-    })
-    .then(() => {
-      input.value = "";
-      alert("✅ Nama berhasil ditambahkan");
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Terjadi kesalahan");
-    });
 }
 
 /************************************************
- * TAMPILKAN ABSENSI (URUT A–Z, TABEL)
+ * TAMPILKAN ABSENSI PER TANGGAL
  ************************************************/
-db.collection("members").onSnapshot(snapshot => {
-  const container = document.getElementById("listAbsensi");
-  if (!container) return;
+function tampilkanAbsensi(tanggal) {
+  judulAbsensi.style.display = "block";
+  judulAbsensi.innerText = "Absensi Tanggal: " + tanggal;
 
-  const members = [];
-  snapshot.forEach(doc => {
-    members.push({ id: doc.id, ...doc.data() });
-  });
-
-  members.sort((a, b) =>
-    formatNama(a.name).localeCompare(formatNama(b.name))
-  );
-
-  container.innerHTML = `
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nama Jemaat</th>
-          <th>Hadir</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  `;
-
-  const tbody = container.querySelector("tbody");
-
-  members.forEach(member => {
-    const tr = document.createElement("tr");
-
-    const tdNama = document.createElement("td");
-    tdNama.innerText = formatNama(member.name);
-
-    const tdCheck = document.createElement("td");
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-
-    db.collection("attendance")
-      .doc(today)
-      .get()
-      .then(att => {
-        if (att.exists && att.data()[member.id] === true) {
-          checkbox.checked = true;
-        }
-      });
-
-    checkbox.addEventListener("change", () => {
-      db.collection("attendance")
-        .doc(today)
-        .set(
-          { [member.id]: checkbox.checked },
-          { merge: true }
-        );
+  db.collection("members").onSnapshot(snapshot => {
+    const members = [];
+    snapshot.forEach(doc => {
+      members.push({ id: doc.id, ...doc.data() });
     });
 
-    tdCheck.appendChild(checkbox);
-    tr.appendChild(tdNama);
-    tr.appendChild(tdCheck);
-    tbody.appendChild(tr);
+    members.sort((a, b) =>
+      formatNama(a.name).localeCompare(formatNama(b.name))
+    );
+
+    listAbsensi.innerHTML = `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Nama Jemaat</th>
+            <th>Hadir</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    `;
+
+    const tbody = listAbsensi.querySelector("tbody");
+
+    members.forEach(member => {
+      const tr = document.createElement("tr");
+
+      const tdNama = document.createElement("td");
+      tdNama.innerText = formatNama(member.name);
+
+      const tdCheck = document.createElement("td");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+
+      db.collection("attendance")
+        .doc(tanggal)
+        .get()
+        .then(att => {
+          if (att.exists && att.data()[member.id] === true) {
+            checkbox.checked = true;
+          }
+        });
+
+      checkbox.addEventListener("change", () => {
+        db.collection("attendance")
+          .doc(tanggal)
+          .set(
+            { [member.id]: checkbox.checked },
+            { merge: true }
+          );
+      });
+
+      tdCheck.appendChild(checkbox);
+      tr.appendChild(tdNama);
+      tr.appendChild(tdCheck);
+      tbody.appendChild(tr);
+    });
   });
-});
+}
