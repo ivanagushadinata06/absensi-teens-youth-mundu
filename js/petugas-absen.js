@@ -1,24 +1,34 @@
-const params = new URLSearchParams(window.location.search);
-const tanggalISO = params.get("tanggal");
-const tanggalLabel = params.get("label");
-
-document.getElementById("judulTanggal").innerText =
-  "Absensi Ibadah: " + (tanggalLabel || tanggalISO);
-
+/************************************************
+ * PROTEKSI LOGIN
+ ************************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = "index.html";
   }
 });
 
+/************************************************
+ * AMBIL PARAMETER URL
+ ************************************************/
 const params = new URLSearchParams(window.location.search);
-const tanggal = params.get("tanggal");
-if (!tanggal) return;
+const tanggalISO = params.get("tanggal");
+const tanggalLabel = params.get("label");
 
+if (!tanggalISO) {
+  alert("Tanggal tidak valid");
+}
+
+/************************************************
+ * TAMPILKAN JUDUL
+ ************************************************/
 document.getElementById("judulTanggal").innerText =
-  "Absensi Ibadah: " + tanggal;
+  "Absensi Ibadah: " + (tanggalLabel || tanggalISO);
 
+/************************************************
+ * FORMAT NAMA
+ ************************************************/
 function formatNama(nama) {
+  if (!nama) return "";
   return nama
     .toString()
     .trim()
@@ -28,10 +38,14 @@ function formatNama(nama) {
     .join(" ");
 }
 
+/************************************************
+ * TAMPILKAN DAFTAR ABSENSI (INI KUNCI)
+ ************************************************/
 db.collection("members").onSnapshot(snapshot => {
   const container = document.getElementById("listAbsensi");
   if (!container) return;
 
+  // ambil & urutkan jemaat
   const members = [];
   snapshot.forEach(doc => {
     members.push({ id: doc.id, ...doc.data() });
@@ -41,6 +55,7 @@ db.collection("members").onSnapshot(snapshot => {
     formatNama(a.name).localeCompare(formatNama(b.name))
   );
 
+  // render tabel
   container.innerHTML = `
     <table class="table">
       <thead>
@@ -65,8 +80,9 @@ db.collection("members").onSnapshot(snapshot => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
+    // ambil status absensi tanggal ini
     db.collection("attendance")
-      .doc(tanggal)
+      .doc(tanggalISO)
       .get()
       .then(att => {
         if (att.exists && att.data()[member.id] === true) {
@@ -74,14 +90,15 @@ db.collection("members").onSnapshot(snapshot => {
         }
       });
 
-    checkbox.onchange = () => {
+    // simpan absensi
+    checkbox.addEventListener("change", () => {
       db.collection("attendance")
-        .doc(tanggal)
+        .doc(tanggalISO)
         .set(
           { [member.id]: checkbox.checked },
           { merge: true }
         );
-    };
+    });
 
     tdCheck.appendChild(checkbox);
     tr.appendChild(tdNama);
@@ -89,3 +106,12 @@ db.collection("members").onSnapshot(snapshot => {
     tbody.appendChild(tr);
   });
 });
+
+/************************************************
+ * LOGOUT
+ ************************************************/
+function logout() {
+  auth.signOut().then(() => {
+    window.location.href = "index.html";
+  });
+}
