@@ -8,24 +8,21 @@ function logout() {
 }
 
 /************************************************
- * FORMAT NAMA
+ * FORMAT NAMA (Kapital Awal Kata)
  ************************************************/
 function formatNama(nama) {
   if (!nama) return "";
-
   return nama
     .toString()
     .trim()
     .toLowerCase()
     .split(/\s+/)
-    .map(
-      kata => kata.charAt(0).toUpperCase() + kata.slice(1)
-    )
+    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
     .join(" ");
 }
 
 /************************************************
- * TAMBAH NAMA JEMAAT (ADMIN)
+ * TAMBAH NAMA JEMAAT (ADMIN – ANTI DUPLIKAT)
  ************************************************/
 function tambahJemaat() {
   const input = document.getElementById("namaJemaat");
@@ -72,19 +69,39 @@ function tambahJemaat() {
 }
 
 /************************************************
- * TAMPILKAN DAFTAR JEMAAT
+ * TAMPILKAN DAFTAR JEMAAT (URUT A–Z, TABEL)
  ************************************************/
 db.collection("members").onSnapshot(snapshot => {
-  const list = document.getElementById("listJemaat");
-  if (!list) return;
+  const container = document.getElementById("listJemaat");
+  if (!container) return;
 
-  list.innerHTML = "";
-
+  const members = [];
   snapshot.forEach(doc => {
-    const data = doc.data();
-    const li = document.createElement("li");
+    members.push(doc.data());
+  });
 
-    li.innerText = formatNama(data.name);
-    list.appendChild(li);
+  members.sort((a, b) =>
+    formatNama(a.name).localeCompare(formatNama(b.name))
+  );
+
+  container.innerHTML = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nama Jemaat</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  `;
+
+  const tbody = container.querySelector("tbody");
+
+  members.forEach(member => {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.innerText = formatNama(member.name);
+    tr.appendChild(td);
+    tbody.appendChild(tr);
   });
 });
