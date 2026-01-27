@@ -10,10 +10,19 @@
   <h2>Admin Dashboard</h2>
   <p>Absensi Teens & Youth Mundu</p>
 
-  <div class="card">
-    <p><strong>Status:</strong> Login sebagai ADMIN</p>
-    <button onclick="logout()">Logout</button>
-  </div>
+ <div class="card">
+  <p><strong>Status:</strong> Login sebagai ADMIN</p>
+
+  <h3>Tambah Nama Jemaat</h3>
+  <input type="text" id="namaJemaat" placeholder="Nama Jemaat">
+  <button onclick="tambahJemaat()">Tambah</button>
+
+  <h3>Daftar Jemaat</h3>
+  <ul id="listJemaat"></ul>
+
+  <br>
+  <button onclick="logout()">Logout</button>
+</div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -23,4 +32,5 @@
   <script src="js/firebase.js"></script>
   <script src="js/admin.js"></script>
 </body>
+
 </html>
