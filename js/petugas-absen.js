@@ -1,3 +1,10 @@
+const params = new URLSearchParams(window.location.search);
+const tanggalISO = params.get("tanggal");
+const tanggalLabel = params.get("label");
+
+document.getElementById("judulTanggal").innerText =
+  "Absensi Ibadah: " + (tanggalLabel || tanggalISO);
+
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = "index.html";
