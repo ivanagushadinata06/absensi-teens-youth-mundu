@@ -1,4 +1,13 @@
 /************************************************
+ * PROTEKSI LOGIN
+ ************************************************/
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "index.html";
+  }
+});
+
+/************************************************
  * AMBIL TANGGAL DARI URL
  ************************************************/
 const params = new URLSearchParams(window.location.search);
@@ -8,7 +17,7 @@ document.getElementById("judulTanggal").innerText =
   "Absensi Ibadah: " + tanggal;
 
 /************************************************
- * FORMAT NAMA (Kapital Awal Kata)
+ * FORMAT NAMA
  ************************************************/
 function formatNama(nama) {
   if (!nama) return "";
@@ -22,13 +31,12 @@ function formatNama(nama) {
 }
 
 /************************************************
- * TAMPILKAN ABSENSI (VERSI YANG SUDAH TERBUKTI)
+ * TAMPILKAN ABSENSI (TABEL, URUT A–Z)
  ************************************************/
 db.collection("members").onSnapshot(snapshot => {
   const container = document.getElementById("listAbsensi");
   if (!container) return;
 
-  // ambil & sortir jemaat
   const members = [];
   snapshot.forEach(doc => {
     members.push({ id: doc.id, ...doc.data() });
@@ -38,7 +46,6 @@ db.collection("members").onSnapshot(snapshot => {
     formatNama(a.name).localeCompare(formatNama(b.name))
   );
 
-  // render tabel
   container.innerHTML = `
     <table class="table">
       <thead>
@@ -56,16 +63,13 @@ db.collection("members").onSnapshot(snapshot => {
   members.forEach(member => {
     const tr = document.createElement("tr");
 
-    // kolom nama
     const tdNama = document.createElement("td");
     tdNama.innerText = formatNama(member.name);
 
-    // kolom checkbox
     const tdCheck = document.createElement("td");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    // ambil status absensi tanggal ini
     db.collection("attendance")
       .doc(tanggal)
       .get()
@@ -75,7 +79,6 @@ db.collection("members").onSnapshot(snapshot => {
         }
       });
 
-    // simpan absensi
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(tanggal)
