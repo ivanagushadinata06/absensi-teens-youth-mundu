@@ -1,41 +1,44 @@
-<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <title>Absensi Ibadah</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Anti cache (aman, tidak ganggu Back normal) -->
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <link rel="stylesheet" href="css/style.css">
 
   <style>
-  /* Perbesar checkbox khusus halaman absensi */
-  input[type="checkbox"] {
-    transform: scale(1.6);   /* ubah ke 1.8 / 2 kalau mau lebih besar */
-    margin-right: 12px;
-  }
+    /* Perbesar checkbox */
+    input[type="checkbox"] {
+      transform: scale(1.6);
+      margin-right: 12px;
+      cursor: pointer;
+    }
 
-  /* Supaya baris nyaman disentuh */
-  #list {
-    font-size: 18px;
-    line-height: 2.2;
-  }
-</style>
+    #listAbsensi {
+      font-size: 18px;
+      line-height: 2.2;
+    }
+  </style>
 </head>
+
 <body>
-<button class="btn-logout" onclick="logout()">Logout</button>
+
+  <!-- Tombol logout floating -->
+  <button class="btn-logout" onclick="logout()">Logout</button>
+
   <h2 id="judulTanggal"></h2>
 
   <div class="card">
     <div id="listAbsensi"></div>
-
-    <br>
-    
   </div>
 
-  <!-- FIREBASE SDK (WAJIB & URUT) -->
+  <!-- FIREBASE SDK (URUTAN WAJIB) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -46,26 +49,5 @@
   <!-- LOGIC ABSENSI -->
   <script src="js/petugas-absen.js"></script>
 
-  <script>
-  window.addEventListener("pageshow", function (event) {
-    // Jika halaman dibuka dari cache (Back / Forward)
-    if (event.persisted) {
-      window.location.replace("index.html");
-    }
-  });
-
-  // Tambahan: jika user tekan Back dan halaman reload
-  if (performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
-    window.location.replace("index.html");
-  }
-</script>
-  <script>
-  // Jika user login ulang, hapus tanda logout
-  window.addEventListener("pageshow", function () {
-    sessionStorage.removeItem("isLogout");
-  });
-</script>
 </body>
-  
-</script>
 </html>
