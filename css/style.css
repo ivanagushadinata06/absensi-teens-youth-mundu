@@ -163,3 +163,28 @@ input[type="checkbox"] {
   width: 80px;
   text-align: center;
 }
+
+.form-anggota {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.form-anggota input {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-anggota button {
+  padding: 10px 14px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.input-search {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
