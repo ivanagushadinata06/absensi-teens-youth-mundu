@@ -59,3 +59,11 @@ auth.onAuthStateChanged(user => {
 function logout() {
   auth.signOut().then(() => location.replace("index.html"));
 }
+
+function capitalizeNama(text) {
+  return text
+    .toLowerCase()
+    .split(" ")
+    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .join(" ");
+}
