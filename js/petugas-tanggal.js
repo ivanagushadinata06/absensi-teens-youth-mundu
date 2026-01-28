@@ -1,3 +1,9 @@
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.replace("index.html");
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const bulanIndex = parseInt(params.get("bulan"));
