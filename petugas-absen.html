@@ -60,11 +60,6 @@
   }
 </script>
   <script>
-  // Jika halaman dibuka SETELAH logout (Back / refresh)
-  if (sessionStorage.getItem("isLogout") === "1") {
-    window.location.replace("index.html");
-  }
-
   // Jika user login ulang, hapus tanda logout
   window.addEventListener("pageshow", function () {
     sessionStorage.removeItem("isLogout");
