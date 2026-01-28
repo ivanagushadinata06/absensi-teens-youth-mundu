@@ -1,3 +1,16 @@
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.replace("index.html");
+    return;
+  }
+
+  db.collection("users").doc(user.uid).get().then(doc => {
+    if (!doc.exists || doc.data().role !== "admin") {
+      window.location.replace("index.html");
+    }
+  });
+});
+
 /************************************************
  * LOGOUT
  ************************************************/
@@ -105,3 +118,4 @@ db.collection("members").onSnapshot(snapshot => {
     tbody.appendChild(tr);
   });
 });
+
