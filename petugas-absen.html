@@ -28,7 +28,24 @@
   <button class="btn-logout" onclick="logout()">Logout</button>
 
   <h2 id="judulTanggal"></h2>
+<!-- Form tambah anggota -->
+<div class="form-anggota">
+  <input
+    type="text"
+    id="inputNamaBaru"
+    placeholder="Tambah nama anggota baru"
+  />
+  <button onclick="tambahAnggota()">Tambah</button>
+</div>
 
+<!-- Pencarian nama -->
+<input
+  type="text"
+  id="searchNama"
+  placeholder="Cari nama jemaat..."
+  oninput="filterNama()"
+  class="input-search"
+/>
  <div class="card">
   <div class="table-scroll">
     <table class="tabel-absen">
