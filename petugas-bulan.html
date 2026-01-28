@@ -23,5 +23,18 @@
 <!-- ⚠️ JANGAN LOAD FIREBASE DI SINI -->
 <script src="js/petugas-bulan.js"></script>
 
+  <script>
+  window.addEventListener("pageshow", function (event) {
+    // Jika halaman dibuka dari cache (Back / Forward)
+    if (event.persisted) {
+      window.location.replace("index.html");
+    }
+  });
+
+  // Tambahan: jika user tekan Back dan halaman reload
+  if (performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
+    window.location.replace("index.html");
+  }
+</script>
 </body>
 </html>
