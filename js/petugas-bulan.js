@@ -1,3 +1,9 @@
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.replace("index.html");
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("bulanContainer");
 
