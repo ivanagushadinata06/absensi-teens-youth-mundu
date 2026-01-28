@@ -1,15 +1,10 @@
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.replace("index.html");
-  }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   const bulanIndex = parseInt(params.get("bulan"));
 
   if (isNaN(bulanIndex)) {
-    alert("Bulan tidak valid");
+    document.getElementById("judulBulan").innerText =
+      "Bulan tidak valid";
     return;
   }
 
@@ -18,9 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     "Juli", "Agustus", "September", "Oktober", "November", "Desember"
   ];
 
-  const tahun = 2026; // bisa diganti sesuai kebutuhan
-  const judul = document.getElementById("judulBulan");
+  const tahun = 2026; // bisa diubah nanti
   const container = document.getElementById("tanggalContainer");
+  const judul = document.getElementById("judulBulan");
 
   judul.innerText = `Pilih Tanggal Ibadah – ${namaBulan[bulanIndex]} ${tahun}`;
 
@@ -29,21 +24,22 @@ document.addEventListener("DOMContentLoaded", () => {
   for (let tgl = 1; tgl <= lastDay; tgl++) {
     const date = new Date(tahun, bulanIndex, tgl);
 
-    // TETAP hanya hari Minggu (0)
+    // HANYA hari Minggu
     if (date.getDay() === 0) {
       const dd = String(tgl).padStart(2, "0");
-      const namaBln = namaBulan[bulanIndex];
-      const tanggalLabel = `${dd} ${namaBln} ${tahun}`;
-      const tanggalISO =
+      const label = `${dd} ${namaBulan[bulanIndex]} ${tahun}`;
+      const iso =
         `${tahun}-${String(bulanIndex + 1).padStart(2, "0")}-${dd}`;
 
       const btn = document.createElement("button");
-      btn.innerText = tanggalLabel; // ✅ TANPA KATA "MINGGU"
+      btn.textContent = label;
+      btn.style.display = "block";
+      btn.style.width = "100%";
       btn.style.marginBottom = "10px";
 
       btn.onclick = () => {
         window.location.href =
-          `petugas-absen.html?tanggal=${tanggalISO}&label=${encodeURIComponent(tanggalLabel)}`;
+          `petugas-absen.html?tanggal=${iso}&label=${encodeURIComponent(label)}`;
       };
 
       container.appendChild(btn);
