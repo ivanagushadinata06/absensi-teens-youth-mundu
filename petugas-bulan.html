@@ -5,47 +5,55 @@
   <title>Pilih Bulan Ibadah</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Anti cache -->
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<button class="btn-logout" onclick="logout()">Logout</button>
-<h2>Pilih Bulan Ibadah</h2>
 
-<div class="card">
-  <div id="bulanContainer"></div>
-</div>
+  <!-- Tombol logout floating -->
+  <button class="btn-logout" onclick="logout()">Logout</button>
 
-<!-- ⚠️ JANGAN LOAD FIREBASE DI SINI -->
-<script src="js/petugas-bulan.js"></script>
+  <h2>Pilih Bulan Ibadah</h2>
+
+  <div class="card">
+    <div id="bulanContainer"></div>
+  </div>
+
+  <!-- Firebase (HANYA untuk logout) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
 
   <script>
-  window.addEventListener("pageshow", function (event) {
-    // Jika halaman dibuka dari cache (Back / Forward)
-    if (event.persisted) {
-      window.location.replace("index.html");
+    const bulan = [
+      "Januari", "Februari", "Maret", "April",
+      "Mei", "Juni", "Juli", "Agustus",
+      "September", "Oktober", "November", "Desember"
+    ];
+
+    const container = document.getElementById("bulanContainer");
+
+    bulan.forEach((nama, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = nama;
+      btn.style.display = "block";
+      btn.style.width = "100%";
+      btn.style.marginBottom = "10px";
+
+      btn.onclick = () => {
+        window.location.href = `petugas-tanggal.html?bulan=${index}`;
+      };
+
+      container.appendChild(btn);
+    });
+
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.replace("index.html");
+      });
     }
-  });
+  </script>
 
-  // Tambahan: jika user tekan Back dan halaman reload
-  if (performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
-    window.location.replace("index.html");
-  }
-</script>
-  <script>
-  // Jika halaman dibuka SETELAH logout (Back / refresh)
-  if (sessionStorage.getItem("isLogout") === "1") {
-    window.location.replace("index.html");
-  }
-
-  // Jika user login ulang, hapus tanda logout
-  window.addEventListener("pageshow", function () {
-    sessionStorage.removeItem("isLogout");
-  });
-</script>
 </body>
 </html>
