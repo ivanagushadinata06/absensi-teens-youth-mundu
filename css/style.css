@@ -125,3 +125,32 @@ input[type="checkbox"] {
 .tabel-absen th:first-child {
   text-align: left;
 }
+
+.table-container {
+  max-height: 70vh;          /* tinggi area scroll */
+  overflow-y: auto;
+}
+
+/* Freeze header */
+.tabel-absen thead th {
+  position: sticky;
+  top: 0;
+  background: #f2f2f2;       /* WAJIB supaya tidak tembus */
+  z-index: 10;
+  border-bottom: 2px solid #ccc;
+}
+
+/* Biar tetap rapi */
+.tabel-absen {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.tabel-absen thead th {
+  background: #eaeaea;
+  font-weight: 600;
+}
+
+.tabel-absen thead th {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
