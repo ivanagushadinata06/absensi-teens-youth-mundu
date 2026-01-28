@@ -126,31 +126,40 @@ input[type="checkbox"] {
   text-align: left;
 }
 
-.table-container {
-  max-height: 70vh;          /* tinggi area scroll */
+/* Area scroll khusus tabel */
+.table-scroll {
+  max-height: 75vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* iOS fix */
 }
 
-/* Freeze header */
+/* Tabel wajib */
+.tabel-absen {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* STICKY HEADER (INI KUNCINYA) */
 .tabel-absen thead th {
   position: sticky;
   top: 0;
-  background: #f2f2f2;       /* WAJIB supaya tidak tembus */
-  z-index: 10;
+  z-index: 100;
+  background: #f2f2f2;
+  text-align: left;
+  padding: 12px;
   border-bottom: 2px solid #ccc;
 }
 
-/* Biar tetap rapi */
-.tabel-absen {
-  border-collapse: collapse;
-  width: 100%;
+/* Sel biasa */
+.tabel-absen td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
 }
 
-.tabel-absen thead th {
-  background: #eaeaea;
-  font-weight: 600;
-}
-
-.tabel-absen thead th {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+/* Kolom checkbox */
+.tabel-absen th:last-child,
+.tabel-absen td:last-child {
+  width: 80px;
+  text-align: center;
 }
