@@ -4,40 +4,54 @@ auth.onAuthStateChanged(user => {
     return;
   }
 
-  // ===== LOGIC ABSEN BARU DIMULAI DI SINI =====
+  // ===== LOGIC ABSEN DIMULAI =====
   const params = new URLSearchParams(location.search);
   const tanggal = params.get("tanggal");
   const label = params.get("label");
 
   document.getElementById("judulTanggal").innerText = label;
 
+  const list = document.getElementById("listAbsensi");
+
   db.collection("members").onSnapshot(snapshot => {
-    const list = document.getElementById("listAbsensi");
     list.innerHTML = "";
 
     snapshot.forEach(doc => {
-      const row = document.createElement("div");
-      row.style.display = "flex";
-      row.style.alignItems = "center";
+      const tr = document.createElement("tr");
+
+      // ===== KOLOM NAMA =====
+      const tdNama = document.createElement("td");
+      tdNama.innerText = doc.data().name;
+
+      // ===== KOLOM CHECKBOX =====
+      const tdCheck = document.createElement("td");
 
       const chk = document.createElement("input");
       chk.type = "checkbox";
 
-      db.collection("attendance").doc(tanggal).get().then(att => {
-        if (att.exists && att.data()[doc.id]) chk.checked = true;
-      });
+      // Ambil data absensi
+      db.collection("attendance")
+        .doc(tanggal)
+        .get()
+        .then(att => {
+          if (att.exists && att.data()[doc.id]) {
+            chk.checked = true;
+          }
+        });
 
+      // Saat checkbox diklik
       chk.onchange = () => {
         db.collection("attendance")
           .doc(tanggal)
-          .set({ [doc.id]: chk.checked }, { merge: true });
+          .set(
+            { [doc.id]: chk.checked },
+            { merge: true }
+          );
       };
 
-      const name = document.createElement("span");
-      name.innerText = doc.data().name;
-
-      row.append(chk, name);
-      list.appendChild(row);
+      tdCheck.appendChild(chk);
+      tr.append(tdNama, tdCheck);
+      list.appendChild(tr);
     });
   });
 });
