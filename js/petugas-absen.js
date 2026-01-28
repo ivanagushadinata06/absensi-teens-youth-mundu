@@ -21,7 +21,7 @@ auth.onAuthStateChanged(user => {
 
       // ===== KOLOM NAMA =====
       const tdNama = document.createElement("td");
-      tdNama.innerText = doc.data().name;
+     tdNama.innerText = capitalizeNama(doc.data().name);
 
       // ===== KOLOM CHECKBOX =====
       const tdCheck = document.createElement("td");
