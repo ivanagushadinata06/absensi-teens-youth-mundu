@@ -90,10 +90,13 @@ function logout() {
 <script>
 /* 🚫 BLOK AKSES SAAT BACK SETELAH LOGOUT */
 window.addEventListener("pageshow", function () {
-  if (!auth.currentUser) {
-    // jika user sudah logout, paksa kembali ke login
+ <script>
+window.addEventListener("pageshow", function () {
+  if (sessionStorage.getItem("forceLogout") === "1") {
     window.location.replace("index.html");
   }
+});
+</script>
 });
 </script>
 </body>
