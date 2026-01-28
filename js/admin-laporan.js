@@ -1,3 +1,6 @@
+/**************************************
+ * PROTEKSI ADMIN
+ **************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.href = "index.html";
@@ -12,6 +15,9 @@ auth.onAuthStateChanged(user => {
   });
 });
 
+/**************************************
+ * KONFIGURASI
+ **************************************/
 const bulanSelect = document.getElementById("bulanSelect");
 const tanggalSelect = document.getElementById("tanggalSelect");
 const laporanDiv = document.getElementById("laporan");
@@ -21,12 +27,25 @@ const namaBulan = [
   "Juli", "Agustus", "September", "Oktober", "November", "Desember"
 ];
 
-const tahun = 2026; // bisa disesuaikan
+const tahun = 2026;
 let dataExport = [];
 
-/* ================================
-   INIT BULAN
-================================ */
+/**************************************
+ * FORMAT NAMA (Huruf Awal Besar)
+ **************************************/
+function formatNama(nama) {
+  return nama
+    .toString()
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .map(k => k.charAt(0).toUpperCase() + k.slice(1))
+    .join(" ");
+}
+
+/**************************************
+ * INIT BULAN
+ **************************************/
 namaBulan.forEach((nama, index) => {
   const opt = document.createElement("option");
   opt.value = index;
@@ -34,11 +53,12 @@ namaBulan.forEach((nama, index) => {
   bulanSelect.appendChild(opt);
 });
 
-/* ================================
-   SAAT BULAN DIPILIH → ISI TANGGAL
-================================ */
+/**************************************
+ * SAAT BULAN DIPILIH → ISI TANGGAL
+ **************************************/
 bulanSelect.addEventListener("change", () => {
-  tanggalSelect.innerHTML = `<option value="">-- pilih tanggal --</option>`;
+  tanggalSelect.innerHTML =
+    `<option value="">-- pilih tanggal --</option>`;
 
   const bulanIndex = parseInt(bulanSelect.value);
   if (isNaN(bulanIndex)) return;
@@ -48,7 +68,6 @@ bulanSelect.addEventListener("change", () => {
   for (let tgl = 1; tgl <= lastDay; tgl++) {
     const date = new Date(tahun, bulanIndex, tgl);
 
-    // hanya hari Minggu
     if (date.getDay() === 0) {
       const dd = String(tgl).padStart(2, "0");
       const label = `${dd} ${namaBulan[bulanIndex]} ${tahun}`;
@@ -63,9 +82,9 @@ bulanSelect.addEventListener("change", () => {
   }
 });
 
-/* ================================
-   TAMPILKAN LAPORAN
-================================ */
+/**************************************
+ * TAMPILKAN LAPORAN
+ **************************************/
 function tampilkanLaporan() {
   const tanggal = tanggalSelect.value;
   if (!tanggal) {
@@ -80,31 +99,50 @@ function tampilkanLaporan() {
     const attData = attDoc.exists ? attDoc.data() : {};
     dataExport = [];
 
+    let rows = [];
+
+    membersSnap.forEach(doc => {
+      const nama = formatNama(doc.data().name);
+      const hadir = attData[doc.id] === true;
+
+      rows.push({ nama, hadir });
+    });
+
+    // 🔥 URUTAN:
+    // 1. Hadir dulu
+    // 2. Tidak hadir
+    // 3. Masing-masing A–Z
+    rows.sort((a, b) => {
+      if (a.hadir !== b.hadir) {
+        return a.hadir ? -1 : 1;
+      }
+      return a.nama.localeCompare(b.nama);
+    });
+
     let html = `
       <table class="table">
         <thead>
           <tr>
-            <th>Nama Jemaat</th>
-            <th>Status</th>
+            <th style="text-align:center;">Nama Jemaat</th>
+            <th style="text-align:center;">Status</th>
           </tr>
         </thead>
         <tbody>
     `;
 
-    membersSnap.forEach(doc => {
-      const nama = doc.data().name;
-      const hadir = attData[doc.id] === true;
-
+    rows.forEach(row => {
       html += `
         <tr>
-          <td>${nama}</td>
-          <td>${hadir ? "Hadir" : "Tidak Hadir"}</td>
+          <td style="text-align:left;">${row.nama}</td>
+          <td style="text-align:center;">
+            ${row.hadir ? "✔️" : "❌"}
+          </td>
         </tr>
       `;
 
       dataExport.push({
-        Nama: nama,
-        Status: hadir ? "Hadir" : "Tidak Hadir"
+        Nama: row.nama,
+        Status: row.hadir ? "Hadir" : "Tidak Hadir"
       });
     });
 
@@ -113,9 +151,9 @@ function tampilkanLaporan() {
   });
 }
 
-/* ================================
-   EXPORT EXCEL
-================================ */
+/**************************************
+ * EXPORT EXCEL
+ **************************************/
 function exportExcel() {
   if (dataExport.length === 0) {
     alert("Tidak ada data untuk diexport");
