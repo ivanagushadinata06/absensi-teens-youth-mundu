@@ -1,64 +1,47 @@
-/************************************
- * AMBIL PARAMETER URL
- ************************************/
-const params = new URLSearchParams(window.location.search);
-const tanggal = params.get("tanggal");
-const label = params.get("label");
-
-if (!tanggal || !label) {
+/* 🔐 AUTH CHECK HALUS */
+if (!auth.currentUser) {
   window.location.replace("index.html");
 }
 
+/* PARAMETER */
+const params = new URLSearchParams(location.search);
+const tanggal = params.get("tanggal");
+const label = params.get("label");
+
 document.getElementById("judulTanggal").innerText = label;
 
-/************************************
- * TAMPILKAN DAFTAR ABSENSI
- ************************************/
+/* DAFTAR ABSENSI */
 db.collection("members").onSnapshot(snapshot => {
   const list = document.getElementById("listAbsensi");
   list.innerHTML = "";
 
   snapshot.forEach(doc => {
-    const data = doc.data();
-
     const row = document.createElement("div");
     row.style.display = "flex";
     row.style.alignItems = "center";
-    row.style.marginBottom = "8px";
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
+    const chk = document.createElement("input");
+    chk.type = "checkbox";
 
-    // Ambil status absensi
     db.collection("attendance").doc(tanggal).get().then(att => {
-      if (att.exists && att.data()[doc.id] === true) {
-        checkbox.checked = true;
-      }
+      if (att.exists && att.data()[doc.id]) chk.checked = true;
     });
 
-    // Simpan absensi
-    checkbox.addEventListener("change", () => {
+    chk.onchange = () => {
       db.collection("attendance")
         .doc(tanggal)
-        .set({ [doc.id]: checkbox.checked }, { merge: true });
-    });
+        .set({ [doc.id]: chk.checked }, { merge: true });
+    };
 
-    const nama = document.createElement("span");
-    nama.innerText = data.name;
+    const name = document.createElement("span");
+    name.innerText = doc.data().name;
 
-    row.appendChild(checkbox);
-    row.appendChild(nama);
+    row.append(chk, name);
     list.appendChild(row);
   });
 });
 
-/************************************
- * LOGOUT (SATU-SATUNYA REDIRECT KE LOGIN)
- ************************************/
+/* LOGOUT */
 function logout() {
-  sessionStorage.setItem("isLogout", "1");
-
-  auth.signOut().then(() => {
-    window.location.replace("index.html");
-  });
+  auth.signOut().then(() => location.replace("index.html"));
 }
