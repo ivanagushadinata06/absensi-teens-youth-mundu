@@ -87,6 +87,14 @@ function logout() {
   });
 }
 </script>
-
+<script>
+/* 🚫 BLOK AKSES SAAT BACK SETELAH LOGOUT */
+window.addEventListener("pageshow", function () {
+  if (!auth.currentUser) {
+    // jika user sudah logout, paksa kembali ke login
+    window.location.replace("index.html");
+  }
+});
+</script>
 </body>
 </html>
