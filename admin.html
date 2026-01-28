@@ -1,0 +1,58 @@
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Absensi Teens & Youth Mundu</title>
+  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+  <h2>Admin Dashboard</h2>
+  <p>Absensi Teens & Youth Mundu</p>
+
+ <div class="card">
+  <p><strong>Status:</strong> Login sebagai ADMIN</p>
+
+  <h3>Tambah Nama Jemaat</h3>
+  <input type="text" id="namaJemaat" placeholder="Nama Jemaat">
+  <button onclick="tambahJemaat()">Tambah</button>
+
+   <hr>
+<h3>Laporan Kehadiran</h3>
+<button onclick="window.location.href='admin-laporan.html'">
+  Lihat Laporan Absensi
+</button>
+
+  <h3>Daftar Jemaat</h3>
+  <ul id="listJemaat"></ul>
+
+  <br>
+  <button onclick="logout()">Logout</button>
+</div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script src="js/firebase.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+  <script>
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      window.location.reload();
+    }
+  });
+</script>
+
+</html>
+
+
+
+
