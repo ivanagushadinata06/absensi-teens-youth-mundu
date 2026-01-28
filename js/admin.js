@@ -16,7 +16,7 @@ auth.onAuthStateChanged(user => {
  ************************************************/
 function logout() {
   auth.signOut().then(() => {
-    window.location.href = "./index.html";
+    window.location.replace("index.html");
   });
 }
 
@@ -118,4 +118,5 @@ db.collection("members").onSnapshot(snapshot => {
     tbody.appendChild(tr);
   });
 });
+
 
