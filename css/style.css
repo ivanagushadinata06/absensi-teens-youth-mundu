@@ -91,3 +91,32 @@ button:hover {
 .btn-logout:hover {
   background: #c0392b;
 }
+
+.tabel-absen {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 18px;
+}
+
+.tabel-absen th {
+  background: #f2f2f2;
+  text-align: left;
+  padding: 12px;
+}
+
+.tabel-absen td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabel-absen th:last-child,
+.tabel-absen td:last-child {
+  text-align: center;
+  width: 80px;
+}
+
+/* Perbesar checkbox */
+input[type="checkbox"] {
+  transform: scale(1.6);
+  cursor: pointer;
+}
