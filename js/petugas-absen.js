@@ -1,118 +1,79 @@
-/************************************************
- * PROTEKSI LOGIN
- ************************************************/
+/************************************
+ * AMBIL PARAMETER TANGGAL
+ ************************************/
+const params = new URLSearchParams(window.location.search);
+const tanggal = params.get("tanggal");
+const label = params.get("label");
+
+if (!tanggal || !label) {
+  // kalau URL tidak valid
+  window.location.replace("index.html");
+}
+
+document.getElementById("judulTanggal").innerText = label;
+
+/************************************
+ * CEK LOGIN (AMAN & MINIMAL)
+ ************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
-    window.location.href = "index.html";
+    window.location.replace("index.html");
   }
 });
 
-/************************************************
- * AMBIL PARAMETER URL
- ************************************************/
-const params = new URLSearchParams(window.location.search);
-const tanggalISO = params.get("tanggal");
-const tanggalLabel = params.get("label");
-
-if (!tanggalISO) {
-  alert("Tanggal tidak valid");
-}
-
-/************************************************
- * TAMPILKAN JUDUL
- ************************************************/
-document.getElementById("judulTanggal").innerText =
-  "Absensi Ibadah: " + (tanggalLabel || tanggalISO);
-
-/************************************************
- * FORMAT NAMA
- ************************************************/
-function formatNama(nama) {
-  if (!nama) return "";
-  return nama
-    .toString()
-    .trim()
-    .toLowerCase()
-    .split(/\s+/)
-    .map(k => k.charAt(0).toUpperCase() + k.slice(1))
-    .join(" ");
-}
-
-/************************************************
- * TAMPILKAN DAFTAR ABSENSI (INI KUNCI)
- ************************************************/
+/************************************
+ * TAMPILKAN DAFTAR ABSENSI
+ ************************************/
 db.collection("members").onSnapshot(snapshot => {
-  const container = document.getElementById("listAbsensi");
-  if (!container) return;
+  const list = document.getElementById("listAbsensi");
+  list.innerHTML = "";
 
-  // ambil & urutkan jemaat
-  const members = [];
   snapshot.forEach(doc => {
-    members.push({ id: doc.id, ...doc.data() });
-  });
+    const data = doc.data();
 
-  members.sort((a, b) =>
-    formatNama(a.name).localeCompare(formatNama(b.name))
-  );
+    const row = document.createElement("div");
+    row.style.display = "flex";
+    row.style.alignItems = "center";
+    row.style.marginBottom = "8px";
 
-  // render tabel
-  container.innerHTML = `
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Nama Jemaat</th>
-          <th>Hadir</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  `;
-
-  const tbody = container.querySelector("tbody");
-
-  members.forEach(member => {
-    const tr = document.createElement("tr");
-
-    const tdNama = document.createElement("td");
-    tdNama.innerText = formatNama(member.name);
-
-    const tdCheck = document.createElement("td");
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    // ambil status absensi tanggal ini
-    db.collection("attendance")
-      .doc(tanggalISO)
-      .get()
-      .then(att => {
-        if (att.exists && att.data()[member.id] === true) {
-          checkbox.checked = true;
-        }
-      });
+    // ambil status absensi hari ini
+    db.collection("attendance").doc(tanggal).get().then(att => {
+      if (att.exists && att.data()[doc.id] === true) {
+        checkbox.checked = true;
+      }
+    });
 
     // simpan absensi
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
-        .doc(tanggalISO)
+        .doc(tanggal)
         .set(
-          { [member.id]: checkbox.checked },
+          { [doc.id]: checkbox.checked },
           { merge: true }
         );
     });
 
-    tdCheck.appendChild(checkbox);
-    tr.appendChild(tdNama);
-    tr.appendChild(tdCheck);
-    tbody.appendChild(tr);
+    const nama = document.createElement("span");
+    nama.innerText = data.name;
+
+    row.appendChild(checkbox);
+    row.appendChild(nama);
+    list.appendChild(row);
   });
 });
 
-/************************************************
- * LOGOUT
- ************************************************/
+/************************************
+ * LOGOUT (BACK DIBLOKIR SETELAH INI)
+ ************************************/
 function logout() {
+  // tandai logout
   sessionStorage.setItem("isLogout", "1");
+
   auth.signOut().then(() => {
+    // replace = hapus halaman dari history
     window.location.replace("index.html");
   });
 }
