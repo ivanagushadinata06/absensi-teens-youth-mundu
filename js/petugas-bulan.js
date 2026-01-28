@@ -26,3 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(btn);
   });
 });
+
+function logout() {
+  window.location.replace("index.html");
+}
