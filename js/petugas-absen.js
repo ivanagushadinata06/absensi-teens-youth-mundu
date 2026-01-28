@@ -1,25 +1,15 @@
 /************************************
- * AMBIL PARAMETER TANGGAL
+ * AMBIL PARAMETER URL
  ************************************/
 const params = new URLSearchParams(window.location.search);
 const tanggal = params.get("tanggal");
 const label = params.get("label");
 
 if (!tanggal || !label) {
-  // kalau URL tidak valid
   window.location.replace("index.html");
 }
 
 document.getElementById("judulTanggal").innerText = label;
-
-/************************************
- * CEK LOGIN (AMAN & MINIMAL)
- ************************************/
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.replace("index.html");
-  }
-});
 
 /************************************
  * TAMPILKAN DAFTAR ABSENSI
@@ -39,21 +29,18 @@ db.collection("members").onSnapshot(snapshot => {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
 
-    // ambil status absensi hari ini
+    // Ambil status absensi
     db.collection("attendance").doc(tanggal).get().then(att => {
       if (att.exists && att.data()[doc.id] === true) {
         checkbox.checked = true;
       }
     });
 
-    // simpan absensi
+    // Simpan absensi
     checkbox.addEventListener("change", () => {
       db.collection("attendance")
         .doc(tanggal)
-        .set(
-          { [doc.id]: checkbox.checked },
-          { merge: true }
-        );
+        .set({ [doc.id]: checkbox.checked }, { merge: true });
     });
 
     const nama = document.createElement("span");
@@ -66,14 +53,12 @@ db.collection("members").onSnapshot(snapshot => {
 });
 
 /************************************
- * LOGOUT (BACK DIBLOKIR SETELAH INI)
+ * LOGOUT (SATU-SATUNYA REDIRECT KE LOGIN)
  ************************************/
 function logout() {
-  // tandai logout
   sessionStorage.setItem("isLogout", "1");
 
   auth.signOut().then(() => {
-    // replace = hapus halaman dari history
     window.location.replace("index.html");
   });
 }
