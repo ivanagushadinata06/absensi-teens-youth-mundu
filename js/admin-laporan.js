@@ -1,3 +1,17 @@
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  db.collection("users").doc(user.uid).get().then(doc => {
+    if (!doc.exists || doc.data().role !== "admin") {
+      alert("Akses ditolak");
+      window.location.href = "index.html";
+    }
+  });
+});
+
 const bulanSelect = document.getElementById("bulanSelect");
 const tanggalSelect = document.getElementById("tanggalSelect");
 const laporanDiv = document.getElementById("laporan");
