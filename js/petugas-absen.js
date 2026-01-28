@@ -43,5 +43,9 @@ auth.onAuthStateChanged(user => {
 });
 
 function logout() {
-  auth.signOut().then(() => location.replace("index.html"));
+  sessionStorage.setItem("forceLogout", "1");
+
+  auth.signOut().then(() => {
+    window.location.replace("index.html");
+  });
 }
