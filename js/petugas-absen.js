@@ -111,6 +111,9 @@ db.collection("members").onSnapshot(snapshot => {
  * LOGOUT
  ************************************************/
 function logout() {
+  // tandai bahwa user sudah logout
+  sessionStorage.setItem("isLogout", "1");
+
   auth.signOut().then(() => {
     window.location.replace("index.html");
   });
