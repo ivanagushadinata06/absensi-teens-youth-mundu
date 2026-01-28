@@ -48,5 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function logout() {
-  window.location.replace("index.html");
+  sessionStorage.setItem("forceLogout", "1");
+
+  auth.signOut().then(() => {
+    window.location.replace("index.html");
+  });
 }
