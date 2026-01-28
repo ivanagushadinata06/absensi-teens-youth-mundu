@@ -112,6 +112,6 @@ db.collection("members").onSnapshot(snapshot => {
  ************************************************/
 function logout() {
   auth.signOut().then(() => {
-    window.location.href = "index.html";
+    window.location.replace("index.html");
   });
 }
