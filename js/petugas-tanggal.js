@@ -46,3 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+function logout() {
+  window.location.replace("index.html");
+}
