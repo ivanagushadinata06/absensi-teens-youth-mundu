@@ -188,3 +188,26 @@ input[type="checkbox"] {
   font-size: 16px;
   margin-bottom: 12px;
 }
+
+.form-anggota {
+  display: flex;
+  flex-direction: column;   /* tombol ke bawah */
+  gap: 8px;
+  margin: 12px 0;
+}
+
+/* input nama dibuat besar */
+.form-anggota input {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+/* tombol tambah NORMAL, tidak kegedean */
+.form-anggota button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
