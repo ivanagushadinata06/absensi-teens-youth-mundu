@@ -147,26 +147,7 @@ button:hover {
 @media (max-width: 768px) {
   .tabel-absen input[type="checkbox"] {
     transform: none;
-    width: 20px;
-    height: 20px;
-  }
-}
-
-/* ================================
-   UKURAN CHECKBOX FINAL (PAS)
-================================ */
-
-/* MOBILE FIRST (HP) */
-.tabel-absen input[type="checkbox"] {
-  width: 32px;      /* ⬅️ diperbesar */
-  height: 32px;
-  cursor: pointer;
-}
-
-/* DESKTOP / LAPTOP */
-@media (min-width: 769px) {
-  .tabel-absen input[type="checkbox"] {
-    width: 18px;    /* ⬅️ diperkecil */
-    height: 18px;
+    width: 26px;
+    height: 26px;
   }
 }
