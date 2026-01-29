@@ -52,11 +52,26 @@ button:hover {
   position: absolute;
   top: 0;
   left: 12px;
-  background: #ddd;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: #ffffff;
   color: #333;
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-back-corner:hover {
+  background: #f5f5f5;
 }
 
 .btn-logout-corner {
@@ -162,3 +177,4 @@ h2 {
     padding: 14px 10px;
   }
 }
+
