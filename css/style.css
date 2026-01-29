@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   background: #f2f2f2;
   text-align: center;
-  padding-top: 50px;
+  padding-top: 20px;
 }
 
 .card {
@@ -303,17 +303,6 @@ input[type="checkbox"] {
   cursor: pointer;
 
   width: auto;
-}
-
-/* Override untuk halaman petugas */
-.btn-back-corner,
-.btn-logout-corner {
-  margin-top: 0;
-}
-
-/* Hilangkan padding-top global secara visual */
-body {
-  padding-top: 0;
 }
 
 
