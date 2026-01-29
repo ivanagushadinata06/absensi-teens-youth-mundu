@@ -151,3 +151,22 @@ button:hover {
     height: 20px;
   }
 }
+
+/* ================================
+   UKURAN CHECKBOX (AMAN STICKY)
+================================ */
+
+/* Default (mobile first) */
+.tabel-absen input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+}
+
+/* Desktop / layar besar */
+@media (min-width: 769px) {
+  .tabel-absen input[type="checkbox"] {
+    width: 26px;
+    height: 26px;
+  }
+}
