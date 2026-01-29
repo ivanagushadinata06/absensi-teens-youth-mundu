@@ -1,9 +1,10 @@
-let dataMembers = [];   // simpan semua anggota (global)
-let tanggal = "";      // supaya bisa dipakai lintas fungsi
+let dataMembers = [];
+let tanggal = "";
+let bolehAbsen = false;
 
-// =============================
-// CEK APAKAH TANGGAL HARI INI (WIB)
-// =============================
+/* =============================
+   CEK TANGGAL HARI INI (WIB)
+============================= */
 async function isHariIniWIB() {
   try {
     const res = await fetch(
@@ -11,10 +12,8 @@ async function isHariIniWIB() {
     );
     const data = await res.json();
 
-    // tanggal hari ini WIB (YYYY-MM-DD)
     const todayWIB = data.datetime.slice(0, 10);
 
-    // tanggal dari URL
     const params = new URLSearchParams(location.search);
     const tanggalURL = params.get("tanggal");
 
@@ -25,33 +24,27 @@ async function isHariIniWIB() {
   }
 }
 
-let bolehAbsen = false;
-
+/* =============================
+   AUTH CHECK + INIT
+============================= */
 auth.onAuthStateChanged(async user => {
   if (!user) {
     window.location.replace("index.html");
     return;
   }
 
-  // 🔒 cek apakah hari ini (WIB)
+  // cek hari ini (WIB)
   bolehAbsen = await isHariIniWIB();
+  if (!bolehAbsen) tampilkanInfoReadonly();
 
-  // jika bukan hari ini, tampilkan info
-  if (!bolehAbsen) {
-    tampilkanInfoReadonly();
-  }
-
-  // ===== LANJUTKAN LOGIC ABSENSI DI BAWAH =====
-});
-
-  // ===== PARAM =====
+  // ambil parameter
   const params = new URLSearchParams(location.search);
   tanggal = params.get("tanggal");
   const label = params.get("label");
 
   document.getElementById("judulTanggal").innerText = label;
 
-  // ===== LISTEN MEMBERS =====
+  // listen members
   db.collection("members")
     .orderBy("name")
     .onSnapshot(snapshot => {
@@ -62,11 +55,14 @@ auth.onAuthStateChanged(async user => {
           name: doc.data().name
         });
       });
+
       renderTable(dataMembers);
     });
 });
 
-// ================= RENDER TABEL =================
+/* =============================
+   RENDER TABEL
+============================= */
 function renderTable(members) {
   const list = document.getElementById("listAbsensi");
   list.innerHTML = "";
@@ -74,21 +70,15 @@ function renderTable(members) {
   members.forEach(member => {
     const tr = document.createElement("tr");
 
-    // Kolom Nama
     const tdNama = document.createElement("td");
     tdNama.innerText = capitalizeNama(member.name);
 
-    // Kolom Checkbox
     const tdCheck = document.createElement("td");
     const chk = document.createElement("input");
     chk.type = "checkbox";
 
-    // jika bukan hari ini → disable
-      if (!bolehAbsen) {
-      chk.disabled = true;
-      }
-    
-    // Ambil status absensi
+    if (!bolehAbsen) chk.disabled = true;
+
     db.collection("attendance")
       .doc(tanggal)
       .get()
@@ -98,14 +88,13 @@ function renderTable(members) {
         }
       });
 
-    // Update saat dicentang
-  chk.onchange = () => {
-  if (!bolehAbsen) return;
+    chk.onchange = () => {
+      if (!bolehAbsen) return;
 
-  db.collection("attendance")
-    .doc(tanggal)
-    .set({ [member.id]: chk.checked }, { merge: true });
-};
+      db.collection("attendance")
+        .doc(tanggal)
+        .set({ [member.id]: chk.checked }, { merge: true });
+    };
 
     tdCheck.appendChild(chk);
     tr.append(tdNama, tdCheck);
@@ -113,7 +102,9 @@ function renderTable(members) {
   });
 }
 
-// ================= SEARCH REALTIME =================
+/* =============================
+   SEARCH
+============================= */
 function filterNama() {
   const keyword = document
     .getElementById("searchNama")
@@ -127,43 +118,15 @@ function filterNama() {
   renderTable(hasil);
 }
 
-// ================= TAMBAH ANGGOTA =================
-function tambahAnggota() {
-  const input = document.getElementById("inputNamaBaru");
-  const namaBaru = input.value.trim();
-
-  if (!namaBaru) {
-    alert("Nama tidak boleh kosong");
-    return;
-  }
-
-  const sudahAda = dataMembers.some(
-    m => m.name.toLowerCase() === namaBaru.toLowerCase()
-  );
-
-  if (sudahAda) {
-    alert("Nama sudah ada di daftar anggota!");
-    return;
-  }
-
-  db.collection("members").add({
-    name: namaBaru
-  });
-
-  input.value = "";
-}
-
-// ================= UTIL =================
+/* =============================
+   UTIL
+============================= */
 function capitalizeNama(text) {
   return text
     .toLowerCase()
     .split(" ")
-    .map(kata => kata.charAt(0).toUpperCase() + kata.slice(1))
+    .map(k => k.charAt(0).toUpperCase() + k.slice(1))
     .join(" ");
-}
-
-function logout() {
-  auth.signOut().then(() => location.replace("index.html"));
 }
 
 function tampilkanInfoReadonly() {
@@ -175,4 +138,8 @@ function tampilkanInfoReadonly() {
 
   const judul = document.getElementById("judulTanggal");
   judul.after(info);
+}
+
+function logout() {
+  auth.signOut().then(() => location.replace("index.html"));
 }
