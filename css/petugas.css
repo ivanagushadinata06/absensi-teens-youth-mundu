@@ -87,6 +87,7 @@ button:hover {
   -webkit-overflow-scrolling: touch;
 }
 
+/* table dasar */
 .tabel-absen {
   width: 100%;
   border-collapse: collapse;
@@ -94,44 +95,59 @@ button:hover {
   text-align: left;
 }
 
-.tabel-absen th {
-  background: #f2f2f2;
-  padding: 12px;
+/* sticky header (PC & Mobile safe) */
+.tabel-absen thead {
   position: sticky;
   top: 0;
+  z-index: 50;
+}
+
+.tabel-absen thead th {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #f2f2f2;
+  padding: 12px;
   border-bottom: 2px solid #ccc;
 }
 
-.tabel-absen td {
+/* body */
+.tabel-absen tbody td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  position: relative;
+  z-index: 1;
 }
 
+/* kolom checkbox */
 .tabel-absen th:last-child,
 .tabel-absen td:last-child {
   width: 80px;
   text-align: center;
 }
 
-/* checkbox */
-input[type="checkbox"] {
-  width: auto;
-  transform: scale(1.6);
-  cursor: pointer;
-}
-
 /* ================================
-   FIX STICKY HEADER ABSENSI
+   CHECKBOX (ANTI STICKY BUG)
 ================================ */
-.tabel-absen thead th {
-  position: sticky;
-  top: 0;
-  z-index: 10;              /* ⬅️ header di atas checkbox */
-  background: #f2f2f2;     /* ⬅️ wajib, supaya tidak tembus */
+.tabel-absen input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+  position: relative;
+  z-index: 1; /* jangan pernah di atas header */
 }
 
-/* Pastikan isi tabel tidak menimpa header */
-.tabel-absen tbody td {
-  position: relative;
-  z-index: 1;
+/* Desktop saja: boleh diperbesar */
+@media (min-width: 769px) {
+  .tabel-absen input[type="checkbox"] {
+    transform: scale(1.6);
+  }
+}
+
+/* Mobile: tanpa transform (BUG FIX) */
+@media (max-width: 768px) {
+  .tabel-absen input[type="checkbox"] {
+    transform: none;
+    width: 20px;
+    height: 20px;
+  }
 }
