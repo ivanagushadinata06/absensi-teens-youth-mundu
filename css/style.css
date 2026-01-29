@@ -265,3 +265,60 @@ input[type="checkbox"] {
 body {
   padding-top: 56px;
 }
+
+/* ================================
+   BUTTON CORNER (KIRI & KANAN)
+================================ */
+
+/* Back kiri atas */
+.btn-back-corner {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+
+  background: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 8px;
+
+  padding: 6px 10px;
+  font-size: 18px;
+  cursor: pointer;
+
+  width: auto;          /* ⬅️ PENTING */
+  display: inline-block;
+  z-index: 9999;
+}
+
+/* Logout kanan atas */
+.btn-logout-corner {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+
+  width: auto;          /* ⬅️ PENTING */
+  display: inline-block;
+  z-index: 9999;
+}
+
+.btn-back-corner:hover {
+  background: #ccc;
+}
+
+.btn-logout-corner:hover {
+  background: #c0392b;
+}
+
+/* Jarak agar konten tidak ketutup tombol */
+body {
+  padding-top: 52px;
+}
