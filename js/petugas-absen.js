@@ -1,6 +1,30 @@
 let dataMembers = [];   // simpan semua anggota (global)
 let tanggal = "";      // supaya bisa dipakai lintas fungsi
 
+// =============================
+// CEK APAKAH TANGGAL HARI INI (WIB)
+// =============================
+async function isHariIniWIB() {
+  try {
+    const res = await fetch(
+      "https://worldtimeapi.org/api/timezone/Asia/Jakarta"
+    );
+    const data = await res.json();
+
+    // tanggal hari ini WIB (YYYY-MM-DD)
+    const todayWIB = data.datetime.slice(0, 10);
+
+    // tanggal dari URL
+    const params = new URLSearchParams(location.search);
+    const tanggalURL = params.get("tanggal");
+
+    return tanggalURL === todayWIB;
+  } catch (err) {
+    alert("Gagal memverifikasi tanggal. Periksa koneksi internet.");
+    return false;
+  }
+}
+
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.replace("index.html");
