@@ -6,27 +6,42 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const daftarBulan = [
-    "Januari", "Februari", "Maret", "April",
-    "Mei", "Juni", "Juli", "Agustus",
-    "September", "Oktober", "November", "Desember"
-  ];
+  // 🔐 Cek login
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      window.location.replace("index.html");
+      return;
+    }
 
-  daftarBulan.forEach((nama, index) => {
-    const btn = document.createElement("button");
-    btn.textContent = nama;
-    btn.style.display = "block";
-    btn.style.width = "100%";
-    btn.style.marginBottom = "10px";
+    const daftarBulan = [
+      "Januari", "Februari", "Maret", "April",
+      "Mei", "Juni", "Juli", "Agustus",
+      "September", "Oktober", "November", "Desember"
+    ];
 
-    btn.onclick = () => {
-      window.location.href = `petugas-tanggal.html?bulan=${index}`;
-    };
+    container.innerHTML = "";
 
-    container.appendChild(btn);
+    daftarBulan.forEach((nama, index) => {
+      const item = document.createElement("div");
+      item.className = "bulan-item";
+
+      item.innerHTML = `
+        <div class="bulan-angka">${index + 1}</div>
+        <div class="bulan-nama">${nama}</div>
+      `;
+
+      item.onclick = () => {
+        window.location.href = `petugas-tanggal.html?bulan=${index}`;
+      };
+
+      container.appendChild(item);
+    });
   });
 });
 
+// 🚪 Logout aman
 function logout() {
-  window.location.replace("index.html");
+  auth.signOut().then(() => {
+    window.location.replace("index.html");
+  });
 }
