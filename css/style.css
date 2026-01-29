@@ -261,11 +261,6 @@ input[type="checkbox"] {
   background: #c0392b;
 }
 
-/* Supaya konten tidak ketutup top bar */
-body {
-  padding-top: 56px;
-}
-
 /* ================================
    HEADER KECIL (TIDAK FLOATING)
 ================================ */
@@ -309,4 +304,5 @@ body {
 
   width: auto;
 }
+
 
