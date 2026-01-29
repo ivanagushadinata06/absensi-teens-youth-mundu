@@ -183,3 +183,34 @@ h2 {
   margin-top: 10px;
   font-size: 14px;
 }
+
+/* ================================
+   LIST JEMAAT (BARIS SEJAJAR)
+================================ */
+.row-jemaat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.nama-jemaat {
+  font-size: 16px;
+}
+
+/* Grup tombol */
+.aksi-jemaat {
+  display: flex;
+  gap: 6px;
+}
+
+/* Tombol hapus merah */
+.btn-hapus {
+  background: #e74c3c;
+}
+
+.btn-hapus:hover {
+  background: #c0392b;
+}
