@@ -48,7 +48,10 @@ function renderList() {
     row.className = "row-jemaat";
 
     row.innerHTML = `
-      <span class="nama-jemaat">${capitalizeNama(jemaat.name)}</span>
+      <span class="nama-jemaat">
+        ${capitalizeNama(jemaat.name)}
+      </span>
+
       <div class="aksi-jemaat">
         <button onclick="editJemaat('${jemaat.id}')">Edit</button>
         <button onclick="hapusJemaat('${jemaat.id}')" class="btn-hapus">
