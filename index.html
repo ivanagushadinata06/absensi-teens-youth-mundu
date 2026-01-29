@@ -2,18 +2,24 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absensi Teens & Youth Mundu</title>
   <link rel="stylesheet" href="css/style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
   <h2>Absensi Teens & Youth Mundu</h2>
 
   <div class="card">
-    <input type="email" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
-    <button onclick="login()">LOGIN</button>
+    <form onsubmit="login(); return false;">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Password" required>
+
+      <button type="submit">LOGIN</button>
+    </form>
     <p id="error"></p>
   </div>
 
@@ -25,5 +31,4 @@
   <script src="js/firebase.js"></script>
   <script src="js/auth.js"></script>
 </body>
-
 </html>
