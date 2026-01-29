@@ -153,20 +153,20 @@ button:hover {
 }
 
 /* ================================
-   UKURAN CHECKBOX (AMAN STICKY)
+   UKURAN CHECKBOX FINAL (PAS)
 ================================ */
 
-/* Default (mobile first) */
+/* MOBILE FIRST (HP) */
 .tabel-absen input[type="checkbox"] {
-  width: 22px;
-  height: 22px;
+  width: 26px;      /* ⬅️ diperbesar */
+  height: 26px;
   cursor: pointer;
 }
 
-/* Desktop / layar besar */
+/* DESKTOP / LAPTOP */
 @media (min-width: 769px) {
   .tabel-absen input[type="checkbox"] {
-    width: 26px;
-    height: 26px;
+    width: 18px;    /* ⬅️ diperkecil */
+    height: 18px;
   }
 }
