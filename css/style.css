@@ -305,8 +305,15 @@ input[type="checkbox"] {
   width: auto;
 }
 
-h2 {
-  margin-top: 4px;
+/* Override untuk halaman petugas */
+.btn-back-corner,
+.btn-logout-corner {
+  margin-top: 0;
+}
+
+/* Hilangkan padding-top global secara visual */
+body {
+  padding-top: 0;
 }
 
 
