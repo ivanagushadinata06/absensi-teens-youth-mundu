@@ -12,8 +12,8 @@
 
   <div class="card">
     <form onsubmit="login(); return false;">
-      <input type="email" id="email" placeholder="Email" required>
-      <input type="password" id="password" placeholder="Password" required>
+      <input type="email" id="email" placeholder="Email" required oninput="error.innerText=''">
+      <input type="password" id="password" placeholder="Password" required oninput="error.innerText=''">
 
       <button type="submit">LOGIN</button>
     </form>
@@ -29,4 +29,5 @@
   <script src="js/auth.js"></script>
 </body>
 </html>
+
 
