@@ -1,5 +1,5 @@
 /* ================================
-   ADMIN BASE
+   PETUGAS BASE
 ================================ */
 body {
   font-family: Arial, sans-serif;
@@ -10,34 +10,11 @@ body {
 
 .card {
   background: #fff;
-  width: 300px;
+  width: 95%;
+  max-width: 420px;
   margin: auto;
-  padding: 20px;
+  padding: 16px;
   border-radius: 8px;
-}
-
-/* ================================
-   FORM
-================================ */
-input[type="text"],
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  box-sizing: border-box;
-}
-
-button {
-  padding: 10px;
-  background: #4CAF50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #45a049;
 }
 
 /* ================================
@@ -80,55 +57,65 @@ button:hover {
 }
 
 /* ================================
-   SEARCH & ERROR
+   FORM
 ================================ */
-.input-search {
+input[type="text"] {
   width: 100%;
   padding: 10px;
-  font-size: 16px;
-  margin-bottom: 12px;
+  margin: 8px 0;
+  box-sizing: border-box;
 }
 
-#error {
-  color: red;
-  font-size: 14px;
-  margin-top: 6px;
+button {
+  padding: 10px;
+  background: #4CAF50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #45a049;
 }
 
 /* ================================
-   LIST JEMAAT (ADMIN)
+   TABEL ABSENSI
 ================================ */
-.row-jemaat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.table-scroll {
+  max-height: 75vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
+.tabel-absen {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
   text-align: left;
-  padding: 8px 6px;
+}
+
+.tabel-absen th {
+  background: #f2f2f2;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+  border-bottom: 2px solid #ccc;
+}
+
+.tabel-absen td {
+  padding: 12px;
   border-bottom: 1px solid #ddd;
 }
 
-.nama-jemaat {
-  flex: 1;
-  font-size: 16px;
+.tabel-absen th:last-child,
+.tabel-absen td:last-child {
+  width: 80px;
+  text-align: center;
 }
 
-.aksi-jemaat {
-  display: flex;
-  gap: 6px;
-}
-
-.aksi-jemaat button {
+/* checkbox */
+input[type="checkbox"] {
   width: auto;
-  padding: 6px 10px;
-  font-size: 14px;
-}
-
-/* tombol hapus */
-.btn-hapus {
-  background: #e74c3c;
-}
-
-.btn-hapus:hover {
-  background: #c0392b;
+  transform: scale(1.6);
+  cursor: pointer;
 }
