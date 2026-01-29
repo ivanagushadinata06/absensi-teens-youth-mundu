@@ -119,3 +119,19 @@ input[type="checkbox"] {
   transform: scale(1.6);
   cursor: pointer;
 }
+
+/* ================================
+   FIX STICKY HEADER ABSENSI
+================================ */
+.tabel-absen thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;              /* ⬅️ header di atas checkbox */
+  background: #f2f2f2;     /* ⬅️ wajib, supaya tidak tembus */
+}
+
+/* Pastikan isi tabel tidak menimpa header */
+.tabel-absen tbody td {
+  position: relative;
+  z-index: 1;
+}
