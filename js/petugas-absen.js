@@ -25,11 +25,24 @@ async function isHariIniWIB() {
   }
 }
 
-auth.onAuthStateChanged(user => {
+let bolehAbsen = false;
+
+auth.onAuthStateChanged(async user => {
   if (!user) {
     window.location.replace("index.html");
     return;
   }
+
+  // 🔒 cek apakah hari ini (WIB)
+  bolehAbsen = await isHariIniWIB();
+
+  // jika bukan hari ini, tampilkan info
+  if (!bolehAbsen) {
+    tampilkanInfoReadonly();
+  }
+
+  // ===== LANJUTKAN LOGIC ABSENSI DI BAWAH =====
+});
 
   // ===== PARAM =====
   const params = new URLSearchParams(location.search);
@@ -70,6 +83,11 @@ function renderTable(members) {
     const chk = document.createElement("input");
     chk.type = "checkbox";
 
+    // jika bukan hari ini → disable
+      if (!bolehAbsen) {
+      chk.disabled = true;
+      }
+    
     // Ambil status absensi
     db.collection("attendance")
       .doc(tanggal)
@@ -81,11 +99,13 @@ function renderTable(members) {
       });
 
     // Update saat dicentang
-    chk.onchange = () => {
-      db.collection("attendance")
-        .doc(tanggal)
-        .set({ [member.id]: chk.checked }, { merge: true });
-    };
+  chk.onchange = () => {
+  if (!bolehAbsen) return;
+
+  db.collection("attendance")
+    .doc(tanggal)
+    .set({ [member.id]: chk.checked }, { merge: true });
+};
 
     tdCheck.appendChild(chk);
     tr.append(tdNama, tdCheck);
@@ -144,4 +164,15 @@ function capitalizeNama(text) {
 
 function logout() {
   auth.signOut().then(() => location.replace("index.html"));
+}
+
+function tampilkanInfoReadonly() {
+  const info = document.createElement("div");
+  info.innerText = "ℹ️ Absensi hanya bisa diisi pada tanggal hari ini";
+  info.style.color = "#e67e22";
+  info.style.fontSize = "14px";
+  info.style.margin = "8px 0";
+
+  const judul = document.getElementById("judulTanggal");
+  judul.after(info);
 }
