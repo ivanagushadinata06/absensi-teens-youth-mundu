@@ -158,8 +158,8 @@ button:hover {
 
 /* MOBILE FIRST (HP) */
 .tabel-absen input[type="checkbox"] {
-  width: 26px;      /* ⬅️ diperbesar */
-  height: 26px;
+  width: 32px;      /* ⬅️ diperbesar */
+  height: 32px;
   cursor: pointer;
 }
 
