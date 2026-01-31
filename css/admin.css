@@ -194,3 +194,28 @@ button:hover {
   background: #fff;
   z-index: 10;
 }
+
+/* ================================
+   TABEL LAPORAN ADMIN
+================================ */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 15px;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ccc;   /* ⬅️ GARIS UTAMA */
+  padding: 8px;
+}
+
+.table thead th {
+  background: #f2f2f2;
+  font-weight: 600;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #fafafa;      /* ⬅️ belang biar rapi */
+}
