@@ -2,7 +2,7 @@ let dataJemaat = [];
 let filteredJemaat = [];
 let editId = null;
 
-// ================= AUTH CHECK =================
+/* ================= AUTH CHECK ================= */
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.replace("index.html");
@@ -19,7 +19,7 @@ auth.onAuthStateChanged(user => {
   });
 });
 
-// ================= LOAD DATA =================
+/* ================= LOAD DATA ================= */
 function loadJemaat() {
   db.collection("members")
     .orderBy("name")
@@ -28,7 +28,8 @@ function loadJemaat() {
       snapshot.forEach(doc => {
         dataJemaat.push({
           id: doc.id,
-          name: doc.data().name
+          name: doc.data().name,
+          ranting: doc.data().ranting || ""
         });
       });
 
@@ -38,7 +39,7 @@ function loadJemaat() {
     });
 }
 
-// ================= RENDER LIST (BARIS) =================
+/* ================= RENDER LIST ================= */
 function renderList() {
   const list = document.getElementById("listJemaat");
   list.innerHTML = "";
@@ -48,9 +49,12 @@ function renderList() {
     row.className = "row-jemaat";
 
     row.innerHTML = `
-      <span class="nama-jemaat">
-        ${capitalizeNama(jemaat.name)}
-      </span>
+      <div style="flex:1;">
+        <div class="nama-jemaat">${capitalizeNama(jemaat.name)}</div>
+        <div style="font-size:13px; color:#666;">
+          Ranting: ${jemaat.ranting || "-"}
+        </div>
+      </div>
 
       <div class="aksi-jemaat">
         <button onclick="editJemaat('${jemaat.id}')">Edit</button>
@@ -64,7 +68,7 @@ function renderList() {
   });
 }
 
-// ================= SEARCH =================
+/* ================= SEARCH ================= */
 function filterJemaat() {
   const keyword = document
     .getElementById("searchJemaat")
@@ -79,10 +83,9 @@ function filterJemaat() {
   updateCounter();
 }
 
-// ================= COUNTER =================
+/* ================= COUNTER ================= */
 function updateCounter() {
   const counter = document.getElementById("jumlahJemaat");
-
   const total = dataJemaat.length;
   const tampil = filteredJemaat.length;
 
@@ -92,16 +95,19 @@ function updateCounter() {
       : `Menampilkan ${tampil} dari ${total} jemaat`;
 }
 
-// ================= TAMBAH / UPDATE =================
+/* ================= TAMBAH / UPDATE ================= */
 function tambahJemaat() {
-  const input = document.getElementById("inputNama");
+  const inputNama = document.getElementById("inputNama");
+  const inputRanting = document.getElementById("inputRanting");
   const errorEl = document.getElementById("error");
-  const nama = input.value.trim();
+
+  const nama = inputNama.value.trim();
+  const ranting = inputRanting.value.trim();
 
   errorEl.innerText = "";
 
   if (!nama) {
-    errorEl.innerText = "Nama tidak boleh kosong";
+    errorEl.innerText = "Nama jemaat tidak boleh kosong";
     return;
   }
 
@@ -111,36 +117,43 @@ function tambahJemaat() {
   );
 
   if (duplikat) {
-    errorEl.innerText = "Nama sudah ada";
+    errorEl.innerText = "Nama jemaat sudah ada";
     return;
   }
 
+  const payload = {
+    name: nama,
+    ranting: ranting
+  };
+
   if (editId) {
-    db.collection("members").doc(editId).update({ name: nama });
+    db.collection("members").doc(editId).update(payload);
     editId = null;
   } else {
-    db.collection("members").add({ name: nama });
+    db.collection("members").add(payload);
   }
 
-  input.value = "";
+  inputNama.value = "";
+  inputRanting.value = "";
 }
 
-// ================= EDIT =================
+/* ================= EDIT ================= */
 function editJemaat(id) {
   const jemaat = dataJemaat.find(j => j.id === id);
   if (!jemaat) return;
 
   document.getElementById("inputNama").value = jemaat.name;
+  document.getElementById("inputRanting").value = jemaat.ranting || "";
   editId = id;
 }
 
-// ================= HAPUS =================
+/* ================= HAPUS ================= */
 function hapusJemaat(id) {
   if (!confirm("Hapus nama jemaat ini?")) return;
   db.collection("members").doc(id).delete();
 }
 
-// ================= UTIL =================
+/* ================= UTIL ================= */
 function capitalizeNama(text) {
   return text
     .toLowerCase()
@@ -149,7 +162,7 @@ function capitalizeNama(text) {
     .join(" ");
 }
 
-// ================= LOGOUT =================
+/* ================= LOGOUT ================= */
 function logout() {
   auth.signOut().then(() => {
     window.location.replace("index.html");
