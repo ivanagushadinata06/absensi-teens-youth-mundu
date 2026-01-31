@@ -1,3 +1,6 @@
+/**************************************
+ * PROTEKSI ADMIN
+ **************************************/
 auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.replace("index.html");
@@ -6,24 +9,8 @@ auth.onAuthStateChanged(user => {
 
   db.collection("users").doc(user.uid).get().then(doc => {
     if (!doc.exists || doc.data().role !== "admin") {
-      window.location.replace("index.html");
-    }
-  });
-});
-
-/**************************************
- * PROTEKSI ADMIN
- **************************************/
-auth.onAuthStateChanged(user => {
-  if (!user) {
-    window.location.href = "index.html";
-    return;
-  }
-
-  db.collection("users").doc(user.uid).get().then(doc => {
-    if (!doc.exists || doc.data().role !== "admin") {
       alert("Akses ditolak");
-      window.location.href = "index.html";
+      window.location.replace("index.html");
     }
   });
 });
@@ -34,6 +21,7 @@ auth.onAuthStateChanged(user => {
 const bulanSelect = document.getElementById("bulanSelect");
 const tanggalSelect = document.getElementById("tanggalSelect");
 const laporanDiv = document.getElementById("laporan");
+const ringkasanDiv = document.getElementById("ringkasanLaporan");
 
 const namaBulan = [
   "Januari", "Februari", "Maret", "April", "Mei", "Juni",
@@ -44,7 +32,7 @@ const tahun = 2026;
 let dataExport = [];
 
 /**************************************
- * FORMAT NAMA (Huruf Awal Besar)
+ * FORMAT NAMA
  **************************************/
 function formatNama(nama) {
   return nama
@@ -67,7 +55,7 @@ namaBulan.forEach((nama, index) => {
 });
 
 /**************************************
- * SAAT BULAN DIPILIH → ISI TANGGAL
+ * SAAT BULAN DIPILIH → ISI TANGGAL MINGGU
  **************************************/
 bulanSelect.addEventListener("change", () => {
   tanggalSelect.innerHTML =
@@ -81,6 +69,7 @@ bulanSelect.addEventListener("change", () => {
   for (let tgl = 1; tgl <= lastDay; tgl++) {
     const date = new Date(tahun, bulanIndex, tgl);
 
+    // hanya hari Minggu
     if (date.getDay() === 0) {
       const dd = String(tgl).padStart(2, "0");
       const label = `${dd} ${namaBulan[bulanIndex]} ${tahun}`;
@@ -100,6 +89,9 @@ bulanSelect.addEventListener("change", () => {
  **************************************/
 function tampilkanLaporan() {
   const tanggal = tanggalSelect.value;
+  laporanDiv.innerHTML = "";
+  ringkasanDiv.innerHTML = "";
+
   if (!tanggal) {
     alert("Pilih tanggal ibadah");
     return;
@@ -113,18 +105,18 @@ function tampilkanLaporan() {
     dataExport = [];
 
     let rows = [];
+    let jumlahHadir = 0;
 
     membersSnap.forEach(doc => {
       const nama = formatNama(doc.data().name);
       const hadir = attData[doc.id] === true;
 
+      if (hadir) jumlahHadir++;
+
       rows.push({ nama, hadir });
     });
 
-    // 🔥 URUTAN:
-    // 1. Hadir dulu
-    // 2. Tidak hadir
-    // 3. Masing-masing A–Z
+    // Urutkan: Hadir dulu, lalu A–Z
     rows.sort((a, b) => {
       if (a.hadir !== b.hadir) {
         return a.hadir ? -1 : 1;
@@ -132,23 +124,29 @@ function tampilkanLaporan() {
       return a.nama.localeCompare(b.nama);
     });
 
+    // Ringkasan
+    ringkasanDiv.innerText = `Jumlah Hadir: ${jumlahHadir} orang`;
+
+    // Tabel
     let html = `
       <table class="table">
         <thead>
           <tr>
-            <th style="text-align:center;">Nama Jemaat</th>
-            <th style="text-align:center;">Status</th>
+            <th style="width:50px;">No</th>
+            <th>Nama Jemaat</th>
+            <th style="width:120px;">Status</th>
           </tr>
         </thead>
         <tbody>
     `;
 
-    rows.forEach(row => {
+    rows.forEach((row, index) => {
       html += `
         <tr>
-          <td style="text-align:left;">${row.nama}</td>
+          <td style="text-align:center;">${index + 1}</td>
+          <td>${row.nama}</td>
           <td style="text-align:center;">
-            ${row.hadir ? "✔️" : "❌"}
+            ${row.hadir ? "Hadir" : "Tidak Hadir"}
           </td>
         </tr>
       `;
@@ -159,7 +157,11 @@ function tampilkanLaporan() {
       });
     });
 
-    html += "</tbody></table>";
+    html += `
+        </tbody>
+      </table>
+    `;
+
     laporanDiv.innerHTML = html;
   });
 }
