@@ -49,19 +49,20 @@ function renderList() {
     row.className = "row-jemaat";
 
     row.innerHTML = `
-      <div style="flex:1;">
-        <div class="nama-jemaat">${capitalizeNama(jemaat.name)}</div>
-        <div style="font-size:13px; color:#666;">
-          Ranting: ${jemaat.ranting || "-"}
-        </div>
-      </div>
+      <span class="col-nama">
+        ${capitalizeNama(jemaat.name)}
+      </span>
 
-      <div class="aksi-jemaat">
+      <span class="col-ranting">
+        ${jemaat.ranting || "-"}
+      </span>
+
+      <span class="col-aksi aksi-jemaat">
         <button onclick="editJemaat('${jemaat.id}')">Edit</button>
         <button onclick="hapusJemaat('${jemaat.id}')" class="btn-hapus">
           Hapus
         </button>
-      </div>
+      </span>
     `;
 
     list.appendChild(row);
