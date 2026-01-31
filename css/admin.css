@@ -187,3 +187,10 @@ button:hover {
   margin-top: 8px;
   border-top: 1px solid #eee;
 }
+
+.header-row {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 10;
+}
