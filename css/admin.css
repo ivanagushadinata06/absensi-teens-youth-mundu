@@ -132,3 +132,47 @@ button:hover {
 .btn-hapus:hover {
   background: #c0392b;
 }
+
+/* ================================
+   KOLOM ADMIN JEMAAT
+================================ */
+.row-jemaat {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr auto;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+/* header */
+.header-row {
+  font-weight: 600;
+  border-bottom: 2px solid #bbb;
+  padding-bottom: 6px;
+}
+
+/* kolom */
+.col-nama {
+  font-size: 15px;
+}
+
+.col-ranting {
+  font-size: 14px;
+  color: #555;
+}
+
+.col-aksi {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* tombol di admin list */
+.col-aksi button {
+  width: auto;
+  padding: 6px 10px;
+  font-size: 14px;
+}
