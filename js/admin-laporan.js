@@ -145,8 +145,8 @@ function tampilkanLaporan() {
         <tr>
           <td style="text-align:center;">${index + 1}</td>
           <td>${row.nama}</td>
-          <td style="text-align:center;">
-            ${row.hadir ? "Hadir" : "Tidak Hadir"}
+         <td style="text-align:center; font-size:18px;">
+          ${row.hadir ? "✔️" : "❌"}
           </td>
         </tr>
       `;
