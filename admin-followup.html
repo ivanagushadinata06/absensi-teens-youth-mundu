@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Follow Up Jemaat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="header-corner">
+  <button class="btn-back-corner" onclick="history.back()">← Kembali</button>
+  <button class="btn-logout-corner" onclick="logout()">Logout</button>
+</div>
+
+<h2>Follow Up Jemaat</h2>
+
+<div class="card">
+
+  <!-- PILIH BULAN -->
+  <label>Pilih Bulan:</label>
+  <select id="bulanSelect"></select>
+
+  <br><br>
+
+  <!-- PILIH TANGGAL -->
+  <label>Pilih Tanggal Ibadah:</label>
+  <select id="tanggalSelect">
+    <option value="">-- pilih tanggal --</option>
+  </select>
+
+  <br><br>
+
+  <button onclick="tampilkanFollowUp()">Tampilkan</button>
+
+  <br><br>
+
+  <div id="hasilFollowUp"></div>
+
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script src="js/firebase.js"></script>
+<script src="js/admin-followup.js"></script>
+
+</body>
+</html>
