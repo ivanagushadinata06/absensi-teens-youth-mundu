@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin | Edit Nama Jemaat</title>
- <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
@@ -17,19 +17,26 @@
 
 <div class="card">
 
-  <!-- Tambah Jemaat -->
+  <!-- Form Tambah / Edit -->
   <div class="form-anggota">
     <input
       type="text"
       id="inputNama"
-      placeholder="Tambah / Edit nama jemaat"
+      placeholder="Nama jemaat"
       onkeydown="if(event.key==='Enter') tambahJemaat()"
     >
+
+    <input
+      type="text"
+      id="inputRanting"
+      placeholder="Ranting (mis. Apel, Delima, Dudaim)"
+    >
+
     <button onclick="tambahJemaat()">Simpan</button>
-    <p id="error" style="color:red;"></p>
+    <p id="error"></p>
   </div>
 
-  <!-- Search + Jumlah -->
+  <!-- Search + Counter -->
   <input
     type="text"
     id="searchJemaat"
@@ -40,6 +47,12 @@
   <p id="jumlahJemaat" style="font-size:14px; margin:6px 0;"></p>
 
   <hr>
+
+  <!-- Header List -->
+  <div style="display:flex; justify-content:space-between; font-weight:600; font-size:14px; margin-bottom:6px;">
+    <span>Nama Jemaat</span>
+    <span>Aksi</span>
+  </div>
 
   <!-- List Jemaat -->
   <div id="listJemaat"></div>
