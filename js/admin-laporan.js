@@ -129,27 +129,27 @@ function tampilkanLaporan() {
 
     // Tabel
     let html = `
-      <table class="table">
-        <thead>
-          <tr>
-            <th style="width:50px;">No</th>
-            <th>Nama Jemaat</th>
-            <th style="width:120px;">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
+  <table class="table">
+    <thead>
+      <tr>
+        <th style="width:50px; text-align:center;">No</th>
+        <th>Nama Jemaat</th>
+        <th style="width:100px; text-align:center;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+`;
 
     rows.forEach((row, index) => {
-      html += `
-        <tr>
-          <td style="text-align:center;">${index + 1}</td>
-          <td>${row.nama}</td>
-         <td style="text-align:center; font-size:18px;">
-          ${row.hadir ? "✔️" : "❌"}
-          </td>
-        </tr>
-      `;
+    html += `
+  <tr>
+    <td style="text-align:center;">${index + 1}</td>
+    <td>${row.nama}</td>
+    <td style="text-align:center; font-size:18px;">
+      ${row.hadir ? "✔️" : "❌"}
+    </td>
+  </tr>
+`;
 
       dataExport.push({
         Nama: row.nama,
