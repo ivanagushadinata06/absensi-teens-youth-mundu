@@ -176,3 +176,14 @@ button:hover {
   padding: 6px 10px;
   font-size: 14px;
 }
+
+/* ================================
+   SCROLL DAFTAR JEMAAT (ADMIN)
+================================ */
+.list-scroll {
+  max-height: 55vh;              /* tinggi area scroll */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 8px;
+  border-top: 1px solid #eee;
+}
