@@ -13,7 +13,6 @@ async function isHariIniWIB() {
     const data = await res.json();
 
     const todayWIB = data.datetime.slice(0, 10);
-
     const params = new URLSearchParams(location.search);
     const tanggalURL = params.get("tanggal");
 
@@ -33,16 +32,19 @@ auth.onAuthStateChanged(async user => {
     return;
   }
 
-  // cek hari ini (WIB)
-  bolehAbsen = await isHariIniWIB();
-  if (!bolehAbsen) tampilkanInfoReadonly();
-
-  // ambil parameter
   const params = new URLSearchParams(location.search);
   tanggal = params.get("tanggal");
   const label = params.get("label");
 
   document.getElementById("judulTanggal").innerText = label;
+
+  // cek apakah boleh absen (WIB)
+  bolehAbsen = await isHariIniWIB();
+
+  if (!bolehAbsen) {
+    tampilkanInfoReadonly();
+    disableTambahNama();
+  }
 
   // listen members
   db.collection("members")
@@ -55,13 +57,12 @@ auth.onAuthStateChanged(async user => {
           name: doc.data().name
         });
       });
-
       renderTable(dataMembers);
     });
 });
 
 /* =============================
-   RENDER TABEL
+   RENDER TABEL ABSEN
 ============================= */
 function renderTable(members) {
   const list = document.getElementById("listAbsensi");
@@ -119,6 +120,39 @@ function filterNama() {
 }
 
 /* =============================
+   TAMBAH ANGGOTA (HANYA HARI INI)
+============================= */
+function tambahAnggota() {
+  if (!bolehAbsen) {
+    alert("Tambah nama hanya bisa dilakukan pada tanggal ibadah hari ini");
+    return;
+  }
+
+  const input = document.getElementById("inputNamaBaru");
+  const namaBaru = input.value.trim();
+
+  if (!namaBaru) {
+    alert("Nama tidak boleh kosong");
+    return;
+  }
+
+  const sudahAda = dataMembers.some(
+    m => m.name.toLowerCase() === namaBaru.toLowerCase()
+  );
+
+  if (sudahAda) {
+    alert("Nama sudah ada");
+    return;
+  }
+
+  db.collection("members").add({
+    name: namaBaru
+  });
+
+  input.value = "";
+}
+
+/* =============================
    UTIL
 ============================= */
 function capitalizeNama(text) {
@@ -131,13 +165,21 @@ function capitalizeNama(text) {
 
 function tampilkanInfoReadonly() {
   const info = document.createElement("div");
-  info.innerText = "ℹ️ Absensi hanya bisa diisi pada tanggal hari ini";
+  info.innerText =
+    "ℹ️ Absensi dan penambahan nama hanya bisa dilakukan pada tanggal ibadah hari ini";
   info.style.color = "#e67e22";
   info.style.fontSize = "14px";
   info.style.margin = "8px 0";
 
-  const judul = document.getElementById("judulTanggal");
-  judul.after(info);
+  document.getElementById("judulTanggal").after(info);
+}
+
+function disableTambahNama() {
+  const input = document.getElementById("inputNamaBaru");
+  const btn = document.querySelector(".form-anggota button");
+
+  if (input) input.disabled = true;
+  if (btn) btn.disabled = true;
 }
 
 function logout() {
