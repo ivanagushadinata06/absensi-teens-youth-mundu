@@ -3,22 +3,25 @@ let tanggal = "";
 let bolehAbsen = false;
 
 /* =============================
-   CEK TANGGAL HARI INI (WIB)
+   CEK TANGGAL HARI INI (WIB DEVICE)
 ============================= */
-async function isHariIniWIB() {
+function isHariIniWIB() {
   try {
-    const res = await fetch(
-      "https://worldtimeapi.org/api/timezone/Asia/Jakarta"
-    );
-    const data = await res.json();
+    const now = new Date();
 
-    const todayWIB = data.datetime.slice(0, 10);
+    // Paksa ke timezone Asia/Jakarta
+    const wib = new Date(
+      now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" })
+    );
+
+    const todayWIB = wib.toISOString().slice(0, 10);
+
     const params = new URLSearchParams(location.search);
     const tanggalURL = params.get("tanggal");
 
     return tanggalURL === todayWIB;
   } catch (err) {
-    alert("Gagal memverifikasi tanggal. Periksa koneksi internet.");
+    console.error("Error cek tanggal:", err);
     return false;
   }
 }
@@ -26,7 +29,7 @@ async function isHariIniWIB() {
 /* =============================
    AUTH CHECK + INIT
 ============================= */
-auth.onAuthStateChanged(async user => {
+auth.onAuthStateChanged(user => {
   if (!user) {
     window.location.replace("index.html");
     return;
@@ -36,10 +39,16 @@ auth.onAuthStateChanged(async user => {
   tanggal = params.get("tanggal");
   const label = params.get("label");
 
+  if (!tanggal) {
+    alert("Tanggal tidak ditemukan");
+    window.location.replace("dashboard.html");
+    return;
+  }
+
   document.getElementById("judulTanggal").innerText = label;
 
-  // cek apakah boleh absen (WIB)
-  bolehAbsen = await isHariIniWIB();
+  // cek apakah boleh absen (WIB DEVICE)
+  bolehAbsen = isHariIniWIB();
 
   if (!bolehAbsen) {
     tampilkanInfoReadonly();
